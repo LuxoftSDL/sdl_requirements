@@ -2,7 +2,7 @@
 
 ###  Sending Policy Table Snapshot from SDL to backend
 
-1. 	
+1. 18053	
 To create Policy Table Snapshot 
 
 PoliciesManager must 
@@ -13,7 +13,7 @@ _Information:_
 a. The Policy Table Snapshot represents a Local Policy Table at a particular moment-in-time.  
 b. `messages` sub-section is excluded from PTS with the purpose to limit the size of a request payload.
 
-2. 
+2. 19072
 PoliciesManager must 
 
 notify HMI via SDL.OnStatusUpdate(UPDATE_NEEDED) on any PTU trigger
@@ -22,7 +22,7 @@ EXTERNAL_PROPRIETARY exception: No notification should be sent on user requested
 
 _Note: the source of the PolicyTableUpdate is the Policies Cloud._
 
-3. 	
+3. 22481	
 In case
 
 SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flaf at all
@@ -32,7 +32,7 @@ SDL must
 - send BC.PolicyUpdate (`path to SnapshotPolicyTable`, `timeout from policies`, `set of retry timeouts`) to HMI
 - reset the flag `UPDATE_NEEDED` to `UPDATING` (by sending OnStatusUpdate to HMI)
 
-4. 
+4. 22482
 In case
 
 SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flaf at all
@@ -55,7 +55,7 @@ Related policies section:
       },
 ```
 
-5. 	
+5. 	18106
 To get the `urls` PTS should be transfered to 
 
 Policies Manager must 
@@ -77,7 +77,7 @@ Example of PT:
         }
       }
 ```
-6. 
+6. 18114
 To define the timeout to wait for a response on PTU
 
 Policies manager must 
@@ -103,7 +103,7 @@ Example of PT:
         625
       ],
 ```
-7. 
+7. 18272
 Policies Manager must 
 
 randomly select the application through which to send the Policy Table packet
@@ -112,7 +112,7 @@ and request an update to its Local Policy Table only through apps with HMI statu
 
 If there are no mobile apps with any of these statuses, the system must use an app with an HMI Level of NONE.
 
-8. 
+8. 22483
 In case
 
 SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flaf at all
@@ -148,19 +148,19 @@ a. OnSystemRequest with SnapshotPT (= binary data) should be sent over "Bulk" Se
 
 b. SDL starts "timeout_after_x_seconds" right after sending OnSystemRequest out to mobile app
 
-9. 
+9. 18179
 PoliciesManager must 
 
 start timeout taken from `timeout_after_x_seconds` field of LocalPT  
 right after sending OnSystemRequest to mobile app
 
-10. 
+10. 18708
 PoliciesManager must 
 
 change the status to `UPDATING` and notify HMI with OnStatusUpdate(`UPDATING`)  
 right after SnapshotPT is sent out to to mobile app via OnSystemRequest() RPC
 
-11. 
+11. 28629
 PoliciesManager must 
 
 stop the timeout started right after sending OnSystemRequest to mobile app  
