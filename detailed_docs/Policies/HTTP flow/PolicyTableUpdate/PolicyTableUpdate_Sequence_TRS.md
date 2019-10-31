@@ -1,6 +1,6 @@
 ## HTTP Policy Table Update Sequence
 
-###  Sending Policy Table Snapshot from SDL to backend
+##  Sending Policy Table Snapshot from SDL to backend
 
 ### **Notification on PTU request**
 
@@ -116,7 +116,7 @@ PoliciesManager must
 
 stop timeout started right after OnSystemRequest is sent out to mobile app in case SDL.OnReceivedPolicyUpdate comes from HMI.
 
-### Processing an answer from a backend
+## Processing an answer from a backend
 ### **Getting Policy Table Update on SDL**
 
 9. 
@@ -137,7 +137,8 @@ validate the Policy Table Update against Policy_Table_Data_Dictionar.xlsx status
 1) Validation must reject a policy table update if it include fields with a status of ‘omitted’
 2) Validation must reject a policy table update if it does not include fields with a status of ‘required’
 
-**Policy Table Update validation failure exception**
+### **Policy Table Update validation failure exception**
+
 11. 18187
 In case PTU validation fails
 
@@ -146,7 +147,8 @@ SDL must
 - discard the Policy Table Update with No notification of Cloud about invalid data
 - notify HMI with OnStatusUpdate(UPDATE_NEEDED)
 
-**Change PolicyUpdate status to UP_TO_DATE**
+### **Change PolicyUpdate status to UP_TO_DATE**
+
 12. 18803
 Right after successful validation of received PTU
 
