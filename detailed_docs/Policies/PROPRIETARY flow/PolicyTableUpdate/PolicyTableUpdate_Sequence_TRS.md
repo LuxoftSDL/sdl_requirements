@@ -1,8 +1,20 @@
 ## PROPRIETARY Policy Table Update Sequence
 
-###  Sending Policy Table Snapshot from SDL to backend
+##  Sending Policy Table Snapshot from SDL to backend
 
-1. 18053	
+### **Notification on PTU request**
+1.
+
+PoliciesManager must 
+
+notify HMI via SDL.OnStatusUpdate(UPDATE_NEEDED) on any PTU trigger
+
+EXTERNAL_PROPRIETARY exception: No notification should be sent on user requested PTU from HMI (via SDL.UpdateSDL request).
+
+_Note: the source of the PolicyTableUpdate is the Policies Cloud._
+
+### **Policy Table Snapshot creation**
+2. 	
 
 To create Policy Table Snapshot 
 
@@ -14,17 +26,8 @@ _Information:_
 a. The Policy Table Snapshot represents a Local Policy Table at a particular moment-in-time.  
 b. `messages` sub-section is excluded from PTS with the purpose to limit the size of a request payload.
 
-2. 19072
-
-PoliciesManager must 
-
-notify HMI via SDL.OnStatusUpdate(UPDATE_NEEDED) on any PTU trigger
-
-EXTERNAL_PROPRIETARY exception: No notification should be sent on user requested PTU from HMI (via SDL.UpdateSDL request).
-
-_Note: the source of the PolicyTableUpdate is the Policies Cloud._
-
-3. 22481	
+### Sending path to Policy Table Snapshot to HMI
+3. 	
 
 In case
 
@@ -35,7 +38,37 @@ SDL must
 - send BC.PolicyUpdate (`path to SnapshotPolicyTable`, `timeout from policies`, `set of retry timeouts`) to HMI
 - reset the flag `UPDATE_NEEDED` to `UPDATING` (by sending OnStatusUpdate to HMI)
 
-4. 22482
+###  Lookup the appropriate "timeout" for getting PTU
+4. 
+
+To define the timeout to wait for a response on PTU
+
+Policies manager must 
+
+refer PTS `module_config` section, key `timeout_after_x_seconds`
+
+Example of PT:
+```
+ "module_config": {
+      "preloaded_pt": true,
+      "vehicle_make": "",
+      "vehicle_model": "",
+      "vehicle_year": "",
+      "exchange_after_x_ignition_cycles": 100,
+      "exchange_after_x_kilometers": 1800,
+      "exchange_after_x_days": 30,
+      "timeout_after_x_seconds": 60,
+      "seconds_between_retries": [
+        1,
+        5,
+        25,
+        125,
+        625
+      ],
+```
+
+### Handling HMI request for policy configuration data
+5. 
 
 In case
 
@@ -45,7 +78,7 @@ and SDL gets SDL.GetPolicyConfigurationData (service: 7) from HMI
 
 SDL must
 
-respond SDL.GetPolicyConfigurationData_response (SUCCESS, urls: array(`<SDL-chosen appID>` + `<url from policy database for service 7>`)) to HMI
+respond SDL.GetPolicyConfigurationData_response (SUCCESS, urls: array(`SDL-chosen appID` + `url from policy database for service 7`)) to HMI
 
 _Information_
 Related policies section:
@@ -59,7 +92,8 @@ Related policies section:
       },
 ```
 
-5. 18106
+### Getting `urls` PTS should be transfered to
+6. 
 
 To get the `urls` PTS should be transfered to 
 
@@ -82,33 +116,8 @@ Example of PT:
         }
       }
 ```
-6. 18114
 
-To define the timeout to wait for a response on PTU
 
-Policies manager must 
-
-refer PTS `module_config` section, key <timeout_after_x_seconds>
-
-Example of PT:
-```
- "module_config": {
-      "preloaded_pt": true,
-      "vehicle_make": "",
-      "vehicle_model": "",
-      "vehicle_year": "",
-      "exchange_after_x_ignition_cycles": 100,
-      "exchange_after_x_kilometers": 1800,
-      "exchange_after_x_days": 30,
-      "timeout_after_x_seconds": 60,
-      "seconds_between_retries": [
-        1,
-        5,
-        25,
-        125,
-        625
-      ],
-```
 7. 18272
 
 Policies Manager must 
