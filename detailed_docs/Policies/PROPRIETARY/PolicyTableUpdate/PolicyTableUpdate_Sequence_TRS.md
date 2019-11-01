@@ -35,8 +35,17 @@ SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag o
 and PolicyTableUpdate is triggered 
 
 SDL must
-- send BC.PolicyUpdate (`path to SnapshotPolicyTable`, `timeout from policies`, `set of retry timeouts`) to HMI
-- reset the flag `UPDATE_NEEDED` to `UPDATING` (by sending OnStatusUpdate to HMI)
+send BC.PolicyUpdate (`path to SnapshotPolicyTable`, `timeout from policies`, `set of retry timeouts`) to HMI
+
+4. 
+
+Upon receiving BC.PolicyUpdate (SUCCESS) response from HMI
+
+PoliciesManager must 
+
+- change the status from `UPDATE_NEEDED` to `UPDATING` 
+- and notify HMI with OnStatusUpdate(`UPDATING`)  
+
 
 ###  Lookup the appropriate "timeout" for getting PTU
 4. 
@@ -116,28 +125,20 @@ Example of PT:
         }
       }
 ```
+### HMI chooses to process PTU via mob app
 
-7. 18272
-
-Policies Manager must 
-
-randomly select the application through which to send the Policy Table packet
-and request an update to its Local Policy Table only through apps with HMI status of BACKGROUND, LIMITED, and FULL.
-
-
-If there are no mobile apps with any of these statuses, the system must use an app with an HMI Level of NONE.
-
-8. 22483
+7.
 
 In case
 
-SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flaf at all
+SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all
 
-and SDL gets BC.OnSystemRequest (PROPRIETARY, fileName: `<path to Snapshot`>, url, appID) from HMI
+and HMI sends BC.OnSystemRequest (PROPRIETARY, fileName: `<path to Snapshot`>, url, appID)
 
 SDL must
 
-send OnSystemRequest to the specified `appID` app with Snapshot and Binary Header (below) in payload:
+send OnSystemRequest to the specified `appID` app with Snapshot and Binary Header (below) in payload
+
 ```
  {
 	"HTTPRequest": {
@@ -162,23 +163,26 @@ _Information_
 
 a. OnSystemRequest with SnapshotPT (= binary data) should be sent over "Bulk" Service (15) to mobile app
 
-b. SDL starts "timeout_after_x_seconds" right after sending OnSystemRequest out to mobile app
 
-9. 18179
+8. 
+
+Policies Manager must 
+
+randomly select the application through which to send the Policy Table packet
+and request an update to its Local Policy Table only through apps with HMI status of BACKGROUND, LIMITED, and FULL.
+
+
+If there are no mobile apps with any of these statuses, the system must use an app with an HMI Level of NONE.
+
+9. 
 
 PoliciesManager must 
 
 start timeout taken from `timeout_after_x_seconds` field of LocalPT  
 right after sending OnSystemRequest to mobile app
 
-10. 18708
 
-PoliciesManager must 
-
-change the status to `UPDATING` and notify HMI with OnStatusUpdate(`UPDATING`)  
-right after SnapshotPT is sent out to to mobile app via OnSystemRequest() RPC
-
-11. 28629
+10. 
 
 PoliciesManager must 
 
