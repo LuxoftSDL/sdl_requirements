@@ -5,6 +5,7 @@
 ### **Notification on PTU request**
 
 1. 19072
+
 PoliciesManager must 
 
 notify HMI via SDL.OnStatusUpdate(UPDATE_NEEDED) on any PTU trigger
@@ -15,6 +16,7 @@ _Note: the source of the PolicyTableUpdate is the Policies Cloud._
 ### **Policy Table Snapshot creation**
 
 2. 18053 
+
 To create Policy Table Snapshot 
 
 PoliciesManager must 
@@ -28,10 +30,11 @@ b. `messages` sub-section is excluded from PTS with the purpose to limit the siz
 ### **Select an application PTS will be transfered with**
 
 3. 18272
+
 Policies Manager must 
 
-randomly select the application through which to send the Policy Table packet
-and request an update to its Local Policy Table only through apps with HMI status of BACKGROUND, LIMITED, and FULL.
+- randomly select the application through which to send the Policy Table packet and 
+- request an update to its Local Policy Table only through apps with HMI status of BACKGROUND, LIMITED, and FULL.
 
 
 If there are no mobile apps with any of these statuses, the system must use an app with an HMI Level of NONE.
@@ -39,6 +42,7 @@ If there are no mobile apps with any of these statuses, the system must use an a
 ### **Define the URL(s) Policy Table Snapshot will be transfered to**
 
 4. 18106
+
 To get the `urls` PTS should be transfered to 
 
 Policies Manager must 
@@ -94,6 +98,7 @@ Example of PT:
 ### **Sending Policy Table Snapshot to backend/mobile application**
 
 6. 18176
+
 SDL must 
 
 send PTS snapshot as a binary data via OnSystemRequest mobile API from the system to backend. 
@@ -105,6 +110,7 @@ Note: If no `url` is provided in Local Policy Table, it is supposed that mobile 
 ### **Start "timeout" countdown for getting an answer with Policy Table Update**
 
 7. 18179
+
 PoliciesManager must 
 
 start timeout taken from `timeout_after_x_seconds` field of LocalPT right after OnSystemRequest is sent out to mobile app.
@@ -112,6 +118,7 @@ start timeout taken from `timeout_after_x_seconds` field of LocalPT right after 
 ### **Start "timeout" countdown**
 
 8. nnn
+
 PoliciesManager must 
 
 stop timeout started right after OnSystemRequest is sent out to mobile app in case SDL.OnReceivedPolicyUpdate comes from HMI.
@@ -120,6 +127,7 @@ stop timeout started right after OnSystemRequest is sent out to mobile app in ca
 ### **Getting Policy Table Update on SDL**
 
 9. 
+
 Upon receiving the response (before timeout) from the application via SystemRequest  
 
 SDL must 
@@ -129,6 +137,7 @@ stop the timer of PTU "timeout" and Base64-decode the payload, which is the Poli
 ### **SDL performs the validation of Policy Table Update**
 
 10. 18184
+
 After Base-64 decoding
 
 SDL must 
@@ -140,6 +149,7 @@ validate the Policy Table Update against Policy_Table_Data_Dictionar.xlsx status
 ### **Policy Table Update validation failure exception**
 
 11. 18187
+
 In case PTU validation fails
 
 SDL must 
@@ -150,6 +160,7 @@ SDL must
 ### **Change PolicyUpdate status to UP_TO_DATE**
 
 12. 18803
+
 Right after successful validation of received PTU
 
 PoliciesManager must 
@@ -159,6 +170,7 @@ change the status to `UP_TO_DATE` and notify HMI with OnStatusUpdate(`UP_TO_DATE
 ### **Merge of Policy Table Update into Local Policy Table**
 
 13. 18190
+
 In case of successful PTU validation   
 
 SDL must 
