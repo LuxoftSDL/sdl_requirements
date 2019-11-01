@@ -1,8 +1,21 @@
 ## PROPRIETARY Policy Table Update Sequence
 
-###  Sending Policy Table Snapshot from SDL to backend
+##  Sending Policy Table Snapshot from SDL to backend
 
-1. 18053	
+### **Notification on PTU request**
+1.
+
+PoliciesManager must 
+
+notify HMI via SDL.OnStatusUpdate(UPDATE_NEEDED) on any PTU trigger
+
+EXTERNAL_PROPRIETARY exception: No notification should be sent on user requested PTU from HMI (via SDL.UpdateSDL request).
+
+_Note: the source of the PolicyTableUpdate is the Policies Cloud._
+
+### **Policy Table Snapshot creation**
+2. 	
+
 To create Policy Table Snapshot 
 
 PoliciesManager must 
@@ -13,16 +26,9 @@ _Information:_
 a. The Policy Table Snapshot represents a Local Policy Table at a particular moment-in-time.  
 b. `messages` sub-section is excluded from PTS with the purpose to limit the size of a request payload.
 
-2. 19072
-PoliciesManager must 
+### Sending path to Policy Table Snapshot to HMI
+3. 	
 
-notify HMI via SDL.OnStatusUpdate(UPDATE_NEEDED) on any PTU trigger
-
-EXTERNAL_PROPRIETARY exception: No notification should be sent on user requested PTU from HMI (via SDL.UpdateSDL request).
-
-_Note: the source of the PolicyTableUpdate is the Policies Cloud._
-
-3. 22481	
 In case
 
 SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flaf at all
@@ -32,7 +38,38 @@ SDL must
 - send BC.PolicyUpdate (`path to SnapshotPolicyTable`, `timeout from policies`, `set of retry timeouts`) to HMI
 - reset the flag `UPDATE_NEEDED` to `UPDATING` (by sending OnStatusUpdate to HMI)
 
-4. 22482
+###  Lookup the appropriate "timeout" for getting PTU
+4. 
+
+To define the timeout to wait for a response on PTU
+
+Policies manager must 
+
+refer PTS `module_config` section, key `timeout_after_x_seconds`
+
+Example of PT:
+```
+ "module_config": {
+      "preloaded_pt": true,
+      "vehicle_make": "",
+      "vehicle_model": "",
+      "vehicle_year": "",
+      "exchange_after_x_ignition_cycles": 100,
+      "exchange_after_x_kilometers": 1800,
+      "exchange_after_x_days": 30,
+      "timeout_after_x_seconds": 60,
+      "seconds_between_retries": [
+        1,
+        5,
+        25,
+        125,
+        625
+      ],
+```
+
+### Handling HMI request for policy configuration data
+5. 
+
 In case
 
 SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flaf at all
@@ -41,7 +78,7 @@ and SDL gets SDL.GetPolicyConfigurationData (service: 7) from HMI
 
 SDL must
 
-respond SDL.GetPolicyConfigurationData_response (SUCCESS, urls: array(`<SDL-chosen appID>` + `<url from policy database for service 7>`)) to HMI
+respond SDL.GetPolicyConfigurationData_response (SUCCESS, urls: array(`SDL-chosen appID` + `url from policy database for service 7`)) to HMI
 
 _Information_
 Related policies section:
@@ -55,7 +92,9 @@ Related policies section:
       },
 ```
 
-5. 	18106
+### Getting `urls` PTS should be transfered to
+6. 
+
 To get the `urls` PTS should be transfered to 
 
 Policies Manager must 
@@ -77,33 +116,9 @@ Example of PT:
         }
       }
 ```
-6. 18114
-To define the timeout to wait for a response on PTU
 
-Policies manager must 
-
-refer PTS `module_config` section, key <timeout_after_x_seconds>
-
-Example of PT:
-```
- "module_config": {
-      "preloaded_pt": true,
-      "vehicle_make": "",
-      "vehicle_model": "",
-      "vehicle_year": "",
-      "exchange_after_x_ignition_cycles": 100,
-      "exchange_after_x_kilometers": 1800,
-      "exchange_after_x_days": 30,
-      "timeout_after_x_seconds": 60,
-      "seconds_between_retries": [
-        1,
-        5,
-        25,
-        125,
-        625
-      ],
-```
 7. 18272
+
 Policies Manager must 
 
 randomly select the application through which to send the Policy Table packet
@@ -113,6 +128,7 @@ and request an update to its Local Policy Table only through apps with HMI statu
 If there are no mobile apps with any of these statuses, the system must use an app with an HMI Level of NONE.
 
 8. 22483
+
 In case
 
 SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flaf at all
@@ -149,18 +165,21 @@ a. OnSystemRequest with SnapshotPT (= binary data) should be sent over "Bulk" Se
 b. SDL starts "timeout_after_x_seconds" right after sending OnSystemRequest out to mobile app
 
 9. 18179
+
 PoliciesManager must 
 
 start timeout taken from `timeout_after_x_seconds` field of LocalPT  
 right after sending OnSystemRequest to mobile app
 
 10. 18708
+
 PoliciesManager must 
 
 change the status to `UPDATING` and notify HMI with OnStatusUpdate(`UPDATING`)  
 right after SnapshotPT is sent out to to mobile app via OnSystemRequest() RPC
 
 11. 28629
+
 PoliciesManager must 
 
 stop the timeout started right after sending OnSystemRequest to mobile app  
@@ -169,7 +188,7 @@ in case SDL.OnReceivedPolicyUpdate comes from HMI
 
 ### Processing an answer from a backend
 
-12. 
+12. 22484
 	
 In case  
 SDL is built with "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all  
@@ -187,7 +206,8 @@ b. UpdatedPT is not applied by SDL until OnReceivedPolicyUpdate notification fro
 c. SDL should expect SystemRequest with UpdatedPT (= binary data) over "Bulk" Service (15) from mobile app  
 d. If SystemRequest is not received during `timeout_after_x_seconds`, SDL should start the "Retry Sequence" 
 
-13. 
+13. 22485
+
 In case  
 SDL is built with "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all  
 and SDL has sent BasicCommunication.SystemRequest to HMI  
@@ -199,7 +219,7 @@ send SystemRequest_response (`<resultCode from HMI response>`) to mobile app
 _Information_  
 a. If SDL's timeout is expired with no response from HMI, SDL responds with GENERIC_ERROR to mobile app
 
-14. 
+14. 22486
 In case  
 SDL is built with "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all  
 and SDL gets SDL.OnReceivedPolicyUpdate (`<path to UpdatedPT>`) from HMI
@@ -208,7 +228,9 @@ SDL must
 apply the valid UpdatedPT to Policy Database
 
 #### PTU Validation
-15. 
+
+15. 18184
+
 After Base-64 decoding
 
 SDL must 
@@ -217,14 +239,16 @@ validate the Policy Table Update against Policy_Table_Data_Dictionar.xlsx status
 1) Validation must reject a policy table update if it include fields with a status of ‘omitted’
 2) Validation must reject a policy table update if it does not include fields with a status of ‘required’
 
-16. 
+16. 18803
+
 Right after successful validation of received PTU
 
 PoliciesManager must 
 
 change the status to `UP_TO_DATE` and notify HMI with OnStatusUpdate(`UP_TO_DATE`)
 
-17. 
+17. 18187
+
 In case PTU validation fails
 
 SDL must 
@@ -233,7 +257,9 @@ SDL must
 - notify HMI with OnStatusUpdate(UPDATE_NEEDED)
 
 #### PTU merge
-18. 
+
+18. 18190
+
 In case of successful PTU validation   
 
 SDL must 
@@ -243,7 +269,8 @@ replace the following sections of the Local Policy Table with the corresponding 
 * `functional_groupings`,
 * `app_policies`
 
-19. 
+19. 18192
+
 In case 
 
 the `consumer_friendly_messages` section of PTU contains a `messages` subsection  
@@ -258,15 +285,15 @@ Note: Refer Data Dictionary for Policy Table structure information
 
 ### PROPRIETARY - PTU using mob app  
 |||
-![PTU_Proprietary](./PTU_Proprietary.png)
+![PTU_Proprietary](./PTU_PROPRIETARY.png)
 |||
 
 ### PROPRIETARY - PTU using in-vehicle modem 
 
 |||
-![PTU_Proprietary_modem_success](./PTU_modem_success.png)
+![PTU_Proprietary_modem_success](./PTU_PROPRIETARY_modem_success.png)
 |||
 
 |||
-![PTU_Proprietary_modem_fail](./PTU_modem_failure.png)
+![PTU_Proprietary_modem_fail](./PTU_PROPRIETARY_modem_failure.png)
 |||
