@@ -48,7 +48,14 @@ PoliciesManager must
 
 
 ###  Lookup the appropriate "timeout" for getting PTU
-5. 
+5.
+Upon sending OnStatusUpdate(`UPDATING`) to HMI 
+
+PoliciesManager must 
+
+start timeout to wait for a response on PTU (taken from `timeout_after_x_seconds` field of LocalPT) 
+
+6. 
 
 To define the timeout to wait for a response on PTU
 
@@ -77,7 +84,7 @@ Example of PT:
 ```
 
 ### Handling HMI request for policy configuration data
-6. 
+7. 
 
 In case
 
@@ -102,7 +109,7 @@ Related policies section:
 ```
 
 ### Getting `urls` PTS should be transfered to
-7. 
+8. 
 
 To get the `urls` PTS should be transfered to 
 
@@ -127,7 +134,7 @@ Example of PT:
 ```
 ### HMI chooses to process PTU via mob app
 
-8.
+9.
 
 In case
 
@@ -164,7 +171,7 @@ _Information_
 a. OnSystemRequest with SnapshotPT (= binary data) should be sent over "Bulk" Service (15) to mobile app
 
 
-9. 
+10. 
 
 Policies Manager must 
 
@@ -174,19 +181,12 @@ and request an update to its Local Policy Table only through apps with HMI statu
 
 If there are no mobile apps with any of these statuses, the system must use an app with an HMI Level of NONE.
 
-10. 
-
-PoliciesManager must 
-
-start timeout taken from `timeout_after_x_seconds` field of LocalPT  
-right after sending OnSystemRequest to mobile app
-
 
 11. 
 
 PoliciesManager must 
 
-stop the timeout started right after sending OnSystemRequest to mobile app  
+stop the timeout started right after sending OnStatusUpdate to HMI
 in case SDL.OnReceivedPolicyUpdate comes from HMI
 
 
