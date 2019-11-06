@@ -41,7 +41,7 @@ Example:
 ..
 etc
 ```
-SyncP Note4: SyncP is responsible for removing Policy Table Snapshot when retry sequence is over.
+SyncP Note4: HMI is responsible for removing Policy Table Snapshot when retry sequence is over.
 
 ### Initiating PTU the next ignition cycle 
 3. 
