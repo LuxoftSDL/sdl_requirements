@@ -58,3 +58,70 @@ Upon sending OnStatusUpdate(`UPDATING`) to HMI
 PoliciesManager must 
 
 start timeout to wait for a response on PTU (taken from `timeout_after_x_seconds` field of LocalPT) 
+
+### Handling HMI request for policy configuration data
+7. 
+In case 
+
+HMI sends a request via SDL.GetPolicyConfigurationData
+
+PoliciesManager must  
+
+respond with the list of pairs URLs taken from Local PT and appropriate internal appIDs (if exist) only for the applications being now connected to SDL.
+
+Note: In case providing the `urls` from `default` PTS section, `appID` parameter will be ommited by SDL.
+
+### Getting urls PTS should be transfered to in case there is no application connected
+8. 
+To get the urls PTS should be transfered to
+
+Policies Manager must
+
+refer `module_config` section > `endpoints` sub-section > parent key `0x07`> key `default` in case there's no application connected at the moment.
+
+Example of PT section
+```
+ "endpoints": {
+        "0x07": {
+          "default": [
+            "http://policies.telematics.ford.com/api/policies", 
+              "http://cloud.ford.com/global"
+          ], 
+             "123": [
+            "http://policies.telematics.ford.com/api/policies", 
+            "http://policies.somedomain.ford.com/api/policies", 
+            "http://policies.anotherdomain.ford.com/api/policies", 
+          ]
+        }
+      }
+```
+
+### Getting urls PTS should be transfered to (an app is registered)
+9. 
+To get the urls PTS should be transfered to
+
+Policies manager must 
+
+refer PTS `endpoints` section, key `0x07`> key `default` and key(s) app id which correspond to policyAppID(s) of the application(s) being connected to SDL now. The values must be provided as pairs (url, appID) in SDL.GetPolicyConfigurationData reponse.
+
+Note: For the "url"(s) from "default" section appID must be set-up as "default" in SDL.GetPolicyConfigurationData response.
+
+Example of PT
+```
+ "endpoints": {
+        "0x07": {
+          "default": [
+            "http://policies.telematics.ford.com/api/policies"
+          ], 
+             "123": [
+            "http://policies.telematics.ford.com/api/policies", 
+            "http://policies.somedomain.ford.com/api/policies", 
+            "http://policies.anotherdomain.ford.com/api/policies", 
+          ]
+        }
+      }
+ ```
+ 
+ ### Sending Policy Table Snapshot from SDL to backend
+ 
+ 
