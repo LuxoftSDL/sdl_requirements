@@ -35,3 +35,26 @@ PathToSnapshot = sdl_snapshot.json
 ```
 
 Note: filepath is defined in "SystemFilesPath"
+
+### Sending path to Policy Table Snapshot to HMI
+4. 
+In case
+PolicyTableUpdate is triggered
+
+SDL must send BC.PolicyUpdate (path to SnapshotPolicyTable) to HMI for future PTS encryption and sending to backend
+
+5.
+Upon receiving BC.PolicyUpdate (SUCCESS) response from HMI
+
+PoliciesManager must 
+
+- change the status from `UPDATE_NEEDED` to `UPDATING` 
+- and notify HMI with OnStatusUpdate(`UPDATING`)
+
+###  Lookup the appropriate "timeout" for getting PTU
+6.
+Upon sending OnStatusUpdate(`UPDATING`) to HMI 
+
+PoliciesManager must 
+
+start timeout to wait for a response on PTU (taken from `timeout_after_x_seconds` field of LocalPT) 
