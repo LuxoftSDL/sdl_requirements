@@ -28,18 +28,17 @@ note over Policy Server: Processes PTS and creates PTU
 Policy Server --> Modem: Sending PTU over cellular
 note over HMI, Modem: Transfer went wrong
 note over SDL:  The timeout from "timeout_after_x_seconds"\nof Local PT is not expired
-HMI->SDL: BC.OnSystemRequest(request_type=PROPRIETORY, url, appID, encryptedFile)
+HMI->SDL: BC.OnSystemRequest(request_type=PROPRIETARY, url, appID, encryptedFile)
 SDL->SDL: Starts timeout taken from "timeout_after_x_seconds" of Local PT
 HMI->HMI: Starts PTU timer
 SDL->Mobile: OnSystemRequest
 note over Mobile: Sends PTS to defined URL\nDownloading the PTU data
 Mobile ->SDL: SystemRequest
-SDL->HMI: BC.SystemRequest(request_type=PROPRIETORY, PTUfilename)
-HMI-->SDL: SUCCESS: BC.SystemRequest
-SDL-->Mobile: SUCCESS: SystemRequest
+SDL->HMI: BC.SystemRequest(request_type=PROPRIETARY, PTUfilename)
 note over HMI: Decrypts PTU,\nnotifies SDL about\ndecrypted PTU
-HMI->HMI: Decrypts PTU()
 HMI->SDL: SDL.OnReceivedPolicyUpdate(<policyFile>)
 SDL->SDL:Stops timeout
-note over SDL: Checks if PTU is correct
+SDL->SDL: Validates PTU and merges PTU into Local PT (if valid)
+HMI-->SDL: SUCCESS: BC.SystemRequest
+SDL-->Mobile: SUCCESS: SystemRequest
 SDL->HMI: SDL.OnStatusUpdate(UP_TO_DATE)

@@ -25,10 +25,9 @@ HMI->HMI: Starts PTU timer
 Modem -> Policy Server: Sending PTS over cellular
 note over Policy Server: Processes PTS and creates PTU
 Policy Server-->Modem: Sending PTU over cellular
-Modem --> HMI: Transport PTU back to HMI
+Modem --> HMI: Transfer PTU back to HMI
 note over HMI: Decrypts PTU,\nnotifies SDL about\ndecrypted PTU
-HMI->HMI: Decrypts PTU()
 HMI->SDL: SDL.OnReceivedPolicyUpdate(<policyFile>)
 SDL->SDL:Stops timeout
-note over SDL: Checks if PTU is correct
+note over SDL: Validates PTU\nPTU is correct\nMerges PTU into Local PT
 SDL->HMI: SDL.OnStatusUpdate(UP_TO_DATE)
