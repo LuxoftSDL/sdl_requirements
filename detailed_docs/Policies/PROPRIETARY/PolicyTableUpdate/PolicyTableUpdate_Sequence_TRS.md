@@ -13,7 +13,7 @@ EXTERNAL_PROPRIETARY exception: No notification should be sent on user requested
 
 _Note: the source of the PolicyTableUpdate is the Policies Cloud._
 
-### **Policy Table Snapshot creation**
+
 2. 	
 
 To create Policy Table Snapshot 

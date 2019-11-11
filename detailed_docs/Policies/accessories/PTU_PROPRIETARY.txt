@@ -4,7 +4,7 @@ participant Policy Server
 participant Mobile
 participant SDL
 participant HMI
-
+==<align:center>SDL is built with with **"-DEXTENDED_POLICY: PROPRIETARY"** flag==
 note over SDL: PT update is required
 
 SDL->HMI: SDL.OnStatusUpdate(UPDATE_NEEDED)
@@ -18,6 +18,7 @@ note over SDL: Get endpoints from policies database
 SDL-->HMI: SDL.GetPolicyConfigurationData(value)
 HMI->HMI: PT snapshot\nencryption
 HMI->SDL: BC.OnSystemRequest(url, path_to_PTS)
+SDL->SDL: Restarts timeout taken from "timeout_after_x_seconds" of Local PT
 SDL->Mobile: OnSystemRequest(url, PTS_in_binaryData)
 Mobile->Policy Server: PT snapshot (PTS)
 Policy Server->Mobile: PT update (PTU)
