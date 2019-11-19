@@ -122,6 +122,142 @@ Example of PT
       }
  ```
  
- ### Sending Policy Table Snapshot from SDL to backend
+### Sending Policy Table Snapshot from SDL to backend/mobile application
+10. 
+When got from SyncP, 
+
+SDL must forward OnSystemRequest(request_type=PROPRIETARY, url, appID) with encrypted PTS snapshot as a hybrid data to mobile application with `appID` value.  
+`fileType` must be assigned as "JSON" in mobile app notification.
+
+Note: SDL resends the `url` parameter to mobile app via OnSystemRequest only in case it receives `url` parameter within BasicCommunication.OnSystemRequest from SyncPManager (HMI_API).
+If SyncP doesn't send any URLs to SDL, it is supposed that mobile application will sent Policy Table Update data back to SDL.
+
+SyncP Note1: It's HMI responsibility to encrypt PTS file and provide it to SDL via OnSystemRequest (HMI API `fileName` parameter).
+
+SyncP Note2: It's HMI responsibility to choose an application for sending PTU and start PTU timer or retry timer after sending OnSystemRequest to SDL.
+
+SyncP Note3: HMI is responsible for initiating retry sequence.  
+In case the corresponding PTU timout or retry timeout expires,  
+
+HMI must  
+send the new OnSystemRequest to SDL until successful Policy Table Update has finished or the number of retry attempts is limited by the number of elements in `seconds_between_retries` section of LPT.
+
+The timeout of the N retry must be count the following way by SyncP:
+1) On getting SDL.PolicyUpdate(retry[],timeout) to store retry[] values.
+
+Example:
+```
+0_RetryTimeout = retry[0] + timeout;
+1st_RetryTimeout = 0_RetryTimeout + retry[1] + timeout
+2nd_RetryTimeout =1st_RetryTimeout + retry[2] +timeout
+..
+etc
+```
+SyncP Note4: HMI is responsible for removing Policy Table Snapshot when retry sequence is over.
+
+### Sending Policy Table Snapshot to backend/mobile application (got appID as "default" from HMI)
+11. 
+On getting OnSystemRequest(request_type=PROPRIETARY, url, timeout, appID) with "default appID" number  
+
+SDL must  
+
+forward OnSystemRequest(request_type=PROPRIETARY, url, timeout, appID) with encrypted PTS snapshot as a hybrid data to any connected mobile application
+
+Note: SDL resends the 'url' parameter to mobile app via OnSystemRequest only in case it receives 'url' parameter within BasicCommunication.OnSystemRequest from SyncPManager (HMI_API).
+
+If HMI doesn't send any URLs to SDL, it is supposed that mobile application will sent Policy Table Update data back to SDL.
+
+HMI Note1: It's HMI responsibility to encrypt and encode PTS file and provide it to SDL via OnSystemRequest HMI API ("filename") parameter.
+
+HMI Note2: It's HMI responsibility to choose an application for sending PTU and start timer (for future retry strategy) after sending OnSystemRequest to SDL.
+
+12.
+PoliciesManager must
+
+stop the timeout started right after sending OnStatusUpdate to HMI in case SDL.OnReceivedPolicyUpdate comes from HMI
+
+### Processing a response from a backend
+13. 
+Upon receiving the response from the application via SystemRequest(requestType=PROPRIETARY)  
+
+SDL must
+
+- read hybrid data and store it by the path specified in smartDeviceLink.ini file under "SystemFilesPath" parameter
+- notify HMI with SystemRequest(requestType=PROPRIETARY, fileName, appID) about PTU has been obtained
+
+HMI Note1: It's HMI responsibility to decode and decrypt the contents of Policy Table Update  
+HMI Note2: On decoding and encrypting the PTU, HMI must_notify SDL with SDL.OnReceivedPolicyUpdate(policyfile)  
+HMINote3: SDL generates the name for file with stored binary data by itself and add the Integer value to each <fileName>, e.g. `<1fileName>`(applicable for IVSU and PROPRIETARY requestTypes)
  
- 
+#### PTU Validation
+14. 
+After getting OnReceivedPolicyUpdate (`policyFile`) from HMI
+
+SDL must
+- stop timeout 
+- validate the Policy Table Update (`policyFile`) according to Data Dictiona dictionary) statuses of optional, required, or omitted:
+
+1) Validation must reject a policy table update if it include fields with a status of ‘omitted’
+2) Validation must reject a policy table update if it does not include fields with a status of ‘required’
+
+Note: In case section with required status "optional/omitted" is ommited in Updated PT, and a field of this section is marked as required, the validation of the mentioned field is not "required" (i.e. policy table must be considered as valid).
+
+15.
+Right after successful validation of received PTU
+
+PoliciesManager must
+
+change the status to UP_TO_DATE and notify HMI with OnStatusUpdate(UP_TO_DATE)
+
+16.
+In case PTU validation fails
+
+SDL must
+
+- log the error locally
+- discard the Policy Table Update with No notification of Cloud about invalid data
+- notify HMI with OnStatusUpdate(UPDATE_NEEDED)
+
+#### PTU merge
+#### PTU merge into Local Policy Table
+17. 18190
+
+In case of successful PTU validation   
+
+SDL must 
+
+replace the following sections of the Local Policy Table with the corresponding sections from PTU:
+* `module_config`,
+* `functional_groupings`,
+* `app_policies`
+
+18. 18192
+
+In case 
+
+the `consumer_friendly_messages` section of PTU contains a `messages` subsection  
+
+SDL must
+
+replace the `consumer_friendly_messages` portion of the Local Policy Table with the same section from PTU
+
+Note: Refer Data Dictionary for Policy Table structure information
+
+
+19. 22734
+In case the Updated PT omits `consumer_friendly_messages` section  
+
+PoliciesManager must 
+
+maintain the current `consumer_friendly_messages` section in Local PT.
+
+#### PTU file removal on PTU sequence end
+20. 
+	
+Policies Manager must delete the file with Policy Table Update (got by SDL.OnReceivedPolicyUpdate) for the both cases:
+
+1) After successful merge Policy Table Update into Local Policy Table
+or
+2) Validation failure against Data Dictionary
+
+#### DecryptCertificate

@@ -190,7 +190,7 @@ stop the timeout started right after sending OnStatusUpdate to HMI
 in case SDL.OnReceivedPolicyUpdate comes from HMI
 
 
-### Processing an answer from a backend
+### Processing a response from a backend
 
 12. 22484
 	
