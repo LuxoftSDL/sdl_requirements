@@ -7,7 +7,7 @@ PoliciesManager must
 
 change the status to `UPDATE_NEEDED` and  
 notify HMI with OnStatusUpdate(`UPDATE_NEEDED`)   
-in case the timeout taken from `timeout_after_x_seconds` field of LocalPT or `timeout between retries` is expired before PoliciesManager receives SystemRequest with PTU from mobile application.
+in case the timeout taken from `timeout_after_x_seconds` field of LocalPT or `timeout between retries` is expired before PoliciesManager receives SDL.OnReceivedPolicyUpdate from HMI.
 
 ### Sending PTS to mobile application
 2. 
@@ -61,7 +61,7 @@ Example scenarios when the system may be unable to receive a request include, bu
 - Mobile app is blocking requests (doesn't allow to set internet connection or is not able to provide internnet connection)
 - Phone unexpectedly disconnects from HU
 - Ignition off
-- Backend server error (see s13i document links)
+- Backend server error
 - Poor/no phone data connection
 - Customer receives a phone call while the policy table is being downloaded into the vehicle (CDMA, Edge)
 
@@ -95,4 +95,4 @@ a. The triggers for checking the cert expiration status are:
 -> TLS handshake  
 b. in case module's certificate in policies is expired or invalid, the TLS handshake will fail  
 c. in case TLS handshake fails because module's certificate is expired or invalid, the "count_of_TLS_errors" must not be incremented  
-d. current model of Ford's backend implementation: certificate is always present in PTU (meaning, each successfull request for policies update would bring a certificate in updated PT)
+d. current model of Ford's backend implementation in Opensource: certificate is always present in PTU (meaning, each successfull request for policies update would bring a certificate in updated PT)
