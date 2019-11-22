@@ -39,7 +39,7 @@ SDL sent PTS to HMI and started the timeout waiting for the PTU
 
 HMI processes PTU using in-vehicle modem to reach Policy Server and transferring PTU goes wrong by some reason 
 
-and HMI sends SDL.OnReceivedPolicyUpdate(`requestType=PROPRIETARY`,`url`,`appID`,`encryptedFile`) within the timeout
+and HMI sends BC.OnSystemRequest(`requestType=PROPRIETARY`,`url`,`appID`,`encryptedFile`) within the timeout
 
 SDL must
 
