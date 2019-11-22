@@ -25,7 +25,7 @@ SyncP Note1: It's HMI responsibility to encrypt PTS file and provide it to SDL v
 SyncP Note2: It's HMI responsibility to choose an application for sending PTU and start PTU timer or retry timer after sending OnSystemRequest to SDL.
 
 SyncP Note3: HMI is responsible for initiating retry sequence.  
-In case the corresponding PTU timout or retry timeout expires,  
+In case the corresponding PTU timeout or retry timeout expires,  
 
 HMI must  
 send the new OnSystemRequest to SDL until successful Policy Table Update has finished or the number of retry attempts is limited by the number of elements in `seconds_between_retries` section of LPT.
@@ -35,7 +35,7 @@ The timeout of the N retry must be count the following way by SyncP:
 
 Example:
 ```
-0_RetryTimeout = retry[0] + timeout;
+0_RetryTimeout = retry[0] + timeout_after_x_seconds;
 1st_RetryTimeout = 0_RetryTimeout + retry[1] + timeout
 2nd_RetryTimeout =1st_RetryTimeout + retry[2] +timeout
 ..
@@ -76,6 +76,7 @@ anything triggers Policy Table Update request
 
 Policy Manager must 
 
+start PTU sequence and in case of failed attempt
 restart retry sequence within the same ignition cycle
 
 ###  SDL must NOT perform retry sequence in case PTU does not bring the valid certificate

@@ -31,7 +31,7 @@ b. `messages` sub-section is excluded from PTS with the purpose to limit the siz
 
 In case
 
-SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flaf at all
+SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all
 and PolicyTableUpdate is triggered 
 
 SDL must
@@ -88,13 +88,13 @@ Example of PT:
 
 In case
 
-SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flaf at all
+SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all
 
 and SDL gets SDL.GetPolicyConfigurationData (service: 7) from HMI
 
 SDL must
 
-respond SDL.GetPolicyConfigurationData_response (SUCCESS, urls: array(`SDL-chosen appID` + `url from policy database for service 7`)) to HMI
+respond SDL.GetPolicyConfigurationData_response (SUCCESS, endpoints:<value of endpoints in JSON format>) to HMI
 
 _Information_
 Related policies section:

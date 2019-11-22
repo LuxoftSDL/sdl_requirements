@@ -63,7 +63,7 @@ start timeout to wait for a response on PTU (taken from `timeout_after_x_seconds
 7. 
 In case 
 
-HMI sends a request via SDL.GetPolicyConfigurationData
+HMI sends a request via SDL.GetPolicyConfigurationData("module_config", property = "endpoints")
 
 PoliciesManager must  
 

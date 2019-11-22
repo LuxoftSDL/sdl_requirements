@@ -13,7 +13,7 @@ initiate the PTUpdate sequence by sending SDL.PolicyUpdate request to HMI right 
 3. 
 PoliciesManager must start a PolicyTable Update sequence 
 
-IN CASE the current date is "24 hours prior to module's certificate expiration date
+IN CASE the current date is 24 hours prior to module's certificate expiration date
 
 _Information:_  
 

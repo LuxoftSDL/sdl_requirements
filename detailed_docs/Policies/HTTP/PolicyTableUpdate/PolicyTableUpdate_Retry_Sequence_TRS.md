@@ -39,7 +39,7 @@ where N>=1 and retries are started to be numerated from "0"
 
 _Example:_
 
-RetryTimeout_1 = <seconds_between_retries>[1] + timeout;
+RetryTimeout_1 = <seconds_between_retries>[1] + <timeout_after_x_seconds>;
 RetryTimeout_2 = RetryTimeout_1 + <seconds_between_retries>[2] + timeout
 RetryTimeout_3 = RetryTimeout_2 + <seconds_between_retries>[3] + timeout
 ..
