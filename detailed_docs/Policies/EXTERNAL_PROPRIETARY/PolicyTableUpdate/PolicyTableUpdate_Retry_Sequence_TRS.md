@@ -11,27 +11,14 @@ in case the timeout taken from `timeout_after_x_seconds` field of LocalPT or `ti
 
 ### Sending PTS to mobile application
 2. 
-
-When got from SyncP, 
-
-SDL must forward OnSystemRequest(request_type=PROPRIETARY, url, appID) with encrypted PTS snapshot as a hybrid data to mobile application with `appID` value.  
-`fileType` must be assigned as "JSON" in mobile app notification.
-
-Note: SDL resends the `url` parameter to mobile app via OnSystemRequest only in case it receives `url` parameter within BasicCommunication.OnSystemRequest from SyncPManager (HMI_API).
-If SyncP doesn't send any URLs to SDL, it is supposed that mobile application will sent Policy Table Update data back to SDL.
-
-SyncP Note1: It's HMI responsibility to encrypt PTS file and provide it to SDL via OnSystemRequest (HMI API `fileName` parameter).
-
-SyncP Note2: It's HMI responsibility to choose an application for sending PTU and start PTU timer or retry timer after sending OnSystemRequest to SDL.
-
-SyncP Note3: HMI is responsible for initiating retry sequence.  
+  
 In case the corresponding PTU timeout or retry timeout expires,  
 
 HMI must  
 send the new OnSystemRequest to SDL until successful Policy Table Update has finished or the number of retry attempts is limited by the number of elements in `seconds_between_retries` section of LPT.
 
-The timeout of the N retry must be count the following way by SyncP:
-1) On getting SDL.PolicyUpdate(retry[],timeout) to store retry[] values.
+The timeout of the N retry must be count the following way by HMI:
+On getting SDL.PolicyUpdate(retry[],timeout) to store retry[] values.
 
 Example:
 ```
@@ -41,7 +28,7 @@ Example:
 ..
 etc
 ```
-SyncP Note4: HMI is responsible for removing Policy Table Snapshot when retry sequence is over.
+HMI Note: HMI is responsible for removing Policy Table Snapshot when retry sequence is over.
 
 ### Initiating PTU the next ignition cycle 
 3. 
