@@ -41,7 +41,9 @@ Note: filepath is defined in "SystemFilesPath"
 In case
 PolicyTableUpdate is triggered
 
-SDL must send BC.PolicyUpdate (path to SnapshotPolicyTable) to HMI for future PTS encryption and sending to backend
+SDL must 
+
+send BC.PolicyUpdate (path to SnapshotPolicyTable) to HMI for future PTS encryption and sending to backend
 
 5.
 Upon receiving BC.PolicyUpdate (SUCCESS) response from HMI
@@ -68,8 +70,6 @@ HMI sends a request via SDL.GetPolicyConfigurationData("module_config", property
 PoliciesManager must  
 
 respond with the list of pairs URLs taken from Local PT and appropriate internal appIDs (if exist) only for the applications being now connected to SDL.
-
-Note: In case providing the `urls` from `default` PTS section, `appID` parameter will be ommited by SDL.
 
 ### Getting urls PTS should be transfered to in case there is no application connected
 8. 
@@ -102,9 +102,7 @@ To get the urls PTS should be transfered to
 
 Policies manager must 
 
-refer PTS `endpoints` section, key `0x07`> key `default` and key(s) app id which correspond to policyAppID(s) of the application(s) being connected to SDL now. The values must be provided as pairs (url, appID) in SDL.GetPolicyConfigurationData reponse.
-
-Note: For the "url"(s) from "default" section appID must be set-up as "default" in SDL.GetPolicyConfigurationData response.
+refer PTS `endpoints` section, key `0x07`> key `default` and key(s) app id which correspond to policyAppID(s) of the application(s) being connected to SDL now. The values must be provided in SDL.GetPolicyConfigurationData(`endpoints`) reponse.
 
 Example of PT
 ```
@@ -132,18 +130,11 @@ SDL must forward OnSystemRequest(request_type=PROPRIETARY, url, appID) with encr
 Note: SDL resends the `url` parameter to mobile app via OnSystemRequest only in case it receives `url` parameter within BasicCommunication.OnSystemRequest from SyncPManager (HMI_API).
 If SyncP doesn't send any URLs to SDL, it is supposed that mobile application will sent Policy Table Update data back to SDL.
 
-SyncP Note1: It's HMI responsibility to encrypt PTS file and provide it to SDL via OnSystemRequest (HMI API `fileName` parameter).
+HMI Note1: It's HMI responsibility to encrypt PTS file and provide it to SDL via OnSystemRequest (HMI API `fileName` parameter).
 
-SyncP Note2: It's HMI responsibility to choose an application for sending PTU and start PTU timer or retry timer after sending OnSystemRequest to SDL.
+HMI Note2: It's HMI responsibility to choose an application for sending PTU and start PTU timer or retry timer after sending OnSystemRequest to SDL.
 
-SyncP Note3: HMI is responsible for initiating retry sequence.  
-In case the corresponding PTU timout or retry timeout expires,  
-
-HMI must  
-send the new OnSystemRequest to SDL until successful Policy Table Update has finished or the number of retry attempts is limited by the number of elements in `seconds_between_retries` section of LPT.
-
-The timeout of the N retry must be count the following way by SyncP:
-1) On getting SDL.PolicyUpdate(retry[],timeout) to store retry[] values.
+HMI Note3: HMI is responsible for initiating retry sequence. (see also [PolicyTableUpdate_Retry_Sequence]()]
 
 Example:
 ```
@@ -153,7 +144,7 @@ Example:
 ..
 etc
 ```
-SyncP Note4: HMI is responsible for removing Policy Table Snapshot when retry sequence is over.
+HMI Note4: HMI is responsible for removing Policy Table Snapshot when retry sequence is over.
 
 ### Sending Policy Table Snapshot to backend/mobile application (got appID as "default" from HMI)
 11. 
@@ -161,7 +152,7 @@ On getting OnSystemRequest(request_type=PROPRIETARY, url, timeout, appID) with "
 
 SDL must  
 
-forward OnSystemRequest(request_type=PROPRIETARY, url, timeout, appID) with encrypted PTS snapshot as a hybrid data to any connected mobile application
+forward OnSystemRequest(request_type=PROPRIETARY, url, timeout, appID) with encrypted PTS snapshot as a hybrid data to connected mobile application `appID`
 
 Note: SDL resends the 'url' parameter to mobile app via OnSystemRequest only in case it receives 'url' parameter within BasicCommunication.OnSystemRequest from SyncPManager (HMI_API).
 
@@ -195,7 +186,7 @@ After getting OnReceivedPolicyUpdate (`policyFile`) from HMI
 
 SDL must
 - stop timeout 
-- validate the Policy Table Update (`policyFile`) according to Data Dictiona dictionary) statuses of optional, required, or omitted:
+- validate the Policy Table Update (`policyFile`) according to Data Dictionary statuses of optional, required, or omitted:
 
 1) Validation must reject a policy table update if it include fields with a status of ‘omitted’
 2) Validation must reject a policy table update if it does not include fields with a status of ‘required’
@@ -220,7 +211,7 @@ SDL must
 
 #### PTU merge
 #### PTU merge into Local Policy Table
-17. 18190
+17. 
 
 In case of successful PTU validation   
 
@@ -231,7 +222,7 @@ replace the following sections of the Local Policy Table with the corresponding 
 * `functional_groupings`,
 * `app_policies`
 
-18. 18192
+18. 
 
 In case 
 
@@ -241,10 +232,7 @@ SDL must
 
 replace the `consumer_friendly_messages` portion of the Local Policy Table with the same section from PTU
 
-Note: Refer Data Dictionary for Policy Table structure information
-
-
-19. 22734
+19. 
 In case the Updated PT omits `consumer_friendly_messages` section  
 
 PoliciesManager must 
