@@ -105,7 +105,7 @@ the "24 hours" trigger worked, but valid PTU does not bring a certificate
 
 SDL should 
 
-NOT perform a retry sequence for getting the PTU with a certificate.
+NOT perform a PTU sequence for getting the PT with a certificate.
 
 
 ## EXTERNAL_PROPRIETARY PTU retry sequence
