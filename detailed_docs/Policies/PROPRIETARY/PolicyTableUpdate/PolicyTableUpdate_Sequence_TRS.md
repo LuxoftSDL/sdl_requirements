@@ -9,8 +9,6 @@ PoliciesManager must
 
 notify HMI via SDL.OnStatusUpdate(UPDATE_NEEDED) on any PTU trigger
 
-EXTERNAL_PROPRIETARY exception: No notification should be sent on user requested PTU from HMI (via SDL.UpdateSDL request).
-
 _Note: the source of the PolicyTableUpdate is the Policies Cloud._
 
 
@@ -31,7 +29,7 @@ b. `messages` sub-section is excluded from PTS with the purpose to limit the siz
 
 In case
 
-SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all
+SDL is built with "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all
 and PolicyTableUpdate is triggered 
 
 SDL must
@@ -183,6 +181,9 @@ If there are no mobile apps with any of these statuses, the system must use an a
 
 
 11. 
+In case 
+
+BC.OnSystemRequest is received without `appID`
 
 PoliciesManager must 
 
@@ -192,7 +193,7 @@ in case SDL.OnReceivedPolicyUpdate comes from HMI
 
 ### Processing a response from a backend
 
-12. 22484
+12. 
 	
 In case  
 SDL is built with "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all  
@@ -210,7 +211,7 @@ b. UpdatedPT is not applied by SDL until OnReceivedPolicyUpdate notification fro
 c. SDL should expect SystemRequest with UpdatedPT (= binary data) over "Bulk" Service (15) from mobile app  
 d. If SystemRequest is not received during `timeout_after_x_seconds`, SDL should start the "Retry Sequence" 
 
-13. 22485
+13. 
 
 In case  
 SDL is built with "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all  
@@ -223,7 +224,7 @@ send SystemRequest_response (`<resultCode from HMI response>`) to mobile app
 _Information_  
 a. If SDL's timeout is expired with no response from HMI, SDL responds with GENERIC_ERROR to mobile app
 
-14. 22486
+14. 
 In case  
 SDL is built with "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all  
 and SDL gets SDL.OnReceivedPolicyUpdate (`<path to UpdatedPT>`) from HMI
@@ -233,17 +234,7 @@ apply the valid UpdatedPT to Policy Database
 
 #### PTU Validation
 
-15. 18184
-
-After Base-64 decoding
-
-SDL must 
-validate the Policy Table Update against Policy_Table_Data_Dictionar.xlsx statuses of optional, required, or omitted:
-
-1) Validation must reject a policy table update if it include fields with a status of ‘omitted’
-2) Validation must reject a policy table update if it does not include fields with a status of ‘required’
-
-16. 18803
+15. 
 
 Right after successful validation of received PTU
 
@@ -251,7 +242,7 @@ PoliciesManager must
 
 change the status to `UP_TO_DATE` and notify HMI with OnStatusUpdate(`UP_TO_DATE`)
 
-17. 18187
+16. 
 
 In case PTU validation fails
 
@@ -262,7 +253,7 @@ SDL must
 
 #### PTU merge
 
-18. 18190
+17. 
 
 In case of successful PTU validation   
 
@@ -273,7 +264,7 @@ replace the following sections of the Local Policy Table with the corresponding 
 * `functional_groupings`,
 * `app_policies`
 
-19. 18192
+18. 
 
 In case 
 
