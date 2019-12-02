@@ -8,7 +8,7 @@ notify HMI via SDL.OnStatusUpdate() notification
 
 right after one of the statuses of `UPDATING`, `UPDATE_NEEDED` and `UP_TO_DATE` is changed from one to another.
 
-2. 18707
+2. 
 
 In case  
 
@@ -76,7 +76,7 @@ PoliciesManager must
 ### Statuses update during/after PTU retry sequence with multiple apps
 
 #### Status after unsuccessful retry sequence
-5. 3762
+5. 
 
 In case 
 
@@ -95,7 +95,7 @@ PoliciesManager must
 - send SDL.OnStatusUpdate(UP_TO_DATE) to HMI once PTU is successfully completed
 
 #### Status when 2nd PTU is started after unsuccessful retry
-6. 3766
+6. 
 
 In case 
 
@@ -110,7 +110,7 @@ and a new application (App_2) registers during the retry sequence
 PoliciesManager must
 
  - send SDL.OnStatusUpdate(UPDATE_NEEDED, UPDATING) to HMI
- - BC.PolicyUpdate
+ - send BC.PolicyUpdate request to HMI to start the new PTU sequence after retry
 
 
 ## Non-functional requirements
