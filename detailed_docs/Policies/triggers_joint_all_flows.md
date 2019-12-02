@@ -1,14 +1,15 @@
-### PROPRIETARY & HTTP
+### Generic triggers
+Generic triggers listed below are applicable for all policies flags
 
 #### Registered app is not listed on the LPT
 1. 
 In case
 
-SDL is built with "DEXTENDED_POLICY:PROPRIETARY" or "DEXTENDED_POLICY:HTTP" flag
+an `appID` of a registered app is not listed on the LPT
 
 The PoliciesManager must 
 
-request an update to its Local Policy Table(LPT) when an `appID` of a registered app is not listed on the LPT.
+request an update to its Local Policy Table(LPT)
 
 #### The stored status of PTU is `UPDATE_NEEDED`
 2. 
@@ -18,24 +19,21 @@ upon any Ign_On the stored status of PTUpdate is `UPDATE_NEEDED`
 
 PoliciesManager must 
 
-a. PROPORIETARY FLOW: initiate the PTUpdate sequence by sending SDL.PolicyUpdate request to HMI right after the first application has registered on SDL;
-b. HTTP FLOW: initiate the PTUpdate sequence by sending OnSystemRequest(url, PTS_in_binaryData) to mobile app
+trigger a PolicyTableUpdate sequence
 
 #### Absent/invalid `certificate`
 3.  
 In case
 
-SDL is built with "DEXTENDED_POLICY:PROPRIETARY" flag
-
 a secure service is starting [app sends StartService (any_serviceType, encypted=true)]
 
-there is NO `certificate` at `module_config` section at LocalPT or the certificate is invalid
+there is NO `certificate` on a file system or the certificate is invalid
 
 SDL must
 
 trigger a PolicyTableUpdate sequence on sending SDL.OnStatusUpdate(UPDATE_NEEDED) to HMI to get `certificate`
 
-Note: In case `certificate` exists at `module_config` section -> SDL must NOT trigger PTU but start  TLS/DTLSHandshake (_see also [GetSystemTime](https://github.ford.com/SmartDeviceLinkMirror/sdl_requirements/blob/develop/detailed_docs/SDL-HMI_API/GetSystemTime/GetSystemTime_TRS.md)_)
+Note: In case `certificate` exists on a file system (files location are defined by `CertificatePath` and `KeyPath` parameters in .INI file) -> SDL must NOT trigger PTU but start TLS/DTLSHandshake (_see also [GetSystemTime](https://github.ford.com/SmartDeviceLinkMirror/sdl_requirements/blob/develop/detailed_docs/SDL-HMI_API/GetSystemTime/GetSystemTime_TRS.md)_)
 
 #### The current date is 24 hours prior to module's certificate expiration
 4. 
@@ -54,9 +52,7 @@ _Information:_
 a. The triggers for checking the cert expiration status are:  
 -> ignition on  
 -> TLS handshake  
-b. in case module's certificate in policies is expired or invalid, the TLS handshake will fail  
-c. in case TLS handshake fails because module's certificate is expired or invalid, the `count_of_TLS_errors` must not be incremented  
-d. current model of backend implementation: `certificate` is always present in PTU (meaning, each successfull request for Policies Update would bring a certificate in updated PT)
+b. current model of backend implementation: `certificate` is always present in PTU (meaning, each successfull request for Policies Update would bring a certificate in updated PT)
 
 #### ignition cycles
 5. 
@@ -98,9 +94,9 @@ SDL must
 trigger a PolicyTableUpdate sequence
 
 
-### EXTERNAL_PROPRIETARY
+### EXTERNAL_PROPRIETARY Specific
 
-#### device consent 
+#### Registered app is not listed on the LPT - EXTERNAL_PROPRIETARY - new app won't be started until device is consented
 1. 
 In case
 
@@ -114,7 +110,7 @@ PoliciesManager must
 
 request an update to its Local Policy Table 
 
-2. 18965
+2. 
 
 In case  
 
@@ -124,7 +120,7 @@ PoliciesManager must
 
 initiate the 'device consent prompt' sequence on HMI
 
-3. 18966
+3. 
 
 In case  
 
@@ -136,7 +132,7 @@ PoliciesManager must
 
 trigger a PolicyTableUpdate sequence
 
-#### User requests PTU
+#### Manual PTU start from HMI
 
 4. 
 In case
@@ -151,7 +147,7 @@ PoliciesManager must
 - respond SDL.OnStatusUpdate() to HMI 
 - process a PolicyTableUpdate sequence
 
-5. 20831
+5. 
 
 In case
 
