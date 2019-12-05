@@ -1,0 +1,38 @@
+title PRU Retry Sequence (External Proprietary)
+participant Mobile
+participant SDL
+participant HMI
+
+note over Mobile,HMI:<align:center>//Preconditions:// 1. SDL is built with with **"-DEXTENDED_POLICY: EXTERNAL_PROPRIETARY"** flag\n2. PolicyTableUpdate is triggered\n3.PolicyTableSnapshot was created
+
+SDL->HMI: BC.PolicyUpdate(path_to_PTS)
+HMI-->SDL: SUCCESS: BC.PolicyUpdate
+SDL->HMI: SDL.OnStatusUpdate(UPDATING)
+SDL->SDL: **Start** timeout taken from **"timeout_after_x_seconds"** of Local PT
+
+opt PTU is received within "timeout_after_x_seconds"
+HMI->SDL: SDL.OnReceivedPolicyUpdate(path_to_PTU)
+SDL->SDL: Stop timeout taken from "timeout_after_x_seconds" of Local PT
+note over SDL: Validates PTU and merges PTU into Local PT (if valid)
+SDL->HMI: SDL.OnStatusUpdate(UP_TO_DATE)
+end 
+
+opt PTU is NOT received within "timeout_after_x_seconds"
+note over SDL: **"timeout_after_x_seconds"** **expired**\nno SystemRequest with PTU from mobile app
+SDL->HMI: SDL.OnStatusUpdate(UPDATE_NEEDED)
+note over HMI: **Start Retry Sequence** 
+HMI->SDL: BC.OnSystemRequest(url, appID, file)
+HMI->HMI: Start t1_retry timeout
+SDL->Mobile: OnSystemRequest()
+SDL->SDL: Start timeout taken from "timeout_after_x_seconds" of Local PT
+SDL->HMI: SDL.OnStatusUpdate(UPDATING)
+note over SDL: "timeout_after_x_seconds" **expired**\n no SystemRequest with PTU from mobile app
+SDL->HMI: SDL.OnStatusUpdate(UPDATE_NEEDED)
+HMI->SDL: BC.OnSystemRequest(url, appID, file)
+HMI->HMI: Start t2_retry timeout
+SDL->Mobile: OnSystemRequest()
+SDL->SDL: Start timeout taken from "timeout_after_x_seconds" of Local PT
+SDL->HMI: SDL.OnStatusUpdate(UPDATING)
+
+note over HMI:When N_retry timeout expires HMI ends retry sequence\n until the next ingnition cycle or a new PTU trigger 
+end 

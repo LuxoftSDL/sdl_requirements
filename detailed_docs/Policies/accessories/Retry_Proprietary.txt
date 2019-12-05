@@ -1,0 +1,43 @@
+title PRU Retry Sequence 
+
+participant Mobile
+participant SDL
+participant HMI
+
+==<align:center>//Preconditions:// 1. SDL is built with with **"-DEXTENDED_POLICY: PROPRIETARY"** or **"-DEXTENDED_POLICY: HTTP"** flag\n2. PolicyTableUpdate is triggered\n3.PolicyTableSnapshot was created==
+
+SDL->HMI: BC.PolicyUpdate(path_to_PTS)
+HMI-->SDL: SUCCESS: BC.PolicyUpdate
+SDL->HMI: SDL.OnStatusUpdate(UPDATING)
+SDL->SDL: Start timeout taken from "timeout_after_x_seconds" of Local PT
+
+opt PTU is received within "timeout_after_x_seconds"
+HMI->SDL: SDL.OnReceivedPolicyUpdate(path_to_PTU)
+SDL->SDL: Stop timeout taken from "timeout_after_x_seconds" of Local PT
+note over SDL: Validates PTU and merges PTU into Local PT (if valid)
+SDL->HMI: SDL.OnStatusUpdate(UP_TO_DATE)
+end 
+
+opt PTU is NOT received within "timeout_after_x_seconds
+note over SDL: "timeout_after_x_seconds" **expired**, no PTU update\n **Start Retry Sequence**
+SDL->HMI: SDL.OnStatusUpdate(UPDATE_NEEDED)
+SDL-> Mobile: OnSystemRequest(timeout,url)
+note over Mobile: Send PTS to defined url\nDownload PTU data
+SDL->HMI: SDL.OnStatusUpdate(UPDATING)
+SDL->SDL: Start t1_retry timeout
+note over SDL: t1_retry timeout **expried**\nno PTUpdate
+SDL->HMI: SDL.OnStatusUpdate(UPDATE_NEEDED)
+SDL-> Mobile: OnSystemRequest(timeout,url)
+SDL->HMI: SDL.OnStatusUpdate(UPDATING)
+SDL->SDL: Start t2_retry timeout
+note over SDL: t2_retry timeout **expried**\nno PTUpdate
+SDL->HMI: SDL.OnStatusUpdate(UPDATE_NEEDED)
+SDL-> Mobile: OnSystemRequest(timeout,url)
+SDL->HMI: SDL.OnStatusUpdate(UPDATING)
+note over SDL: Continue retry sequence until\na. PTU is successfully received or\nb. the number of the retries is exhausted
+end 
+opt PTU retries were exhausted, PTU was not received in the ignition cycle
+note over Mobile,HMI: New ignition cycle 
+SDL->HMI: SDL.OnStatusUpdate(UPDATE_NEEDED)
+SDL->SDL: Start new PTU sequence
+end
