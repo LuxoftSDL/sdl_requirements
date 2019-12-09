@@ -4,7 +4,7 @@
 
 ### **Notification on PTU request**
 
-1. 19072
+1. 
 
 PoliciesManager must 
 
@@ -15,7 +15,7 @@ _Note: the source of the PolicyTableUpdate is the Policies Cloud._
 
 ### **Policy Table Snapshot creation**
 
-2. 18053 
+2.  
 
 To create Policy Table Snapshot 
 
@@ -29,7 +29,7 @@ b. `messages` sub-section is excluded from PTS with the purpose to limit the siz
 
 ### **Select an application PTS will be transfered with**
 
-3. 18272
+3. 
 
 Policies Manager must 
 
@@ -41,7 +41,7 @@ If there are no mobile apps with any of these statuses, the system must use an a
 
 ### **Define the URL(s) Policy Table Snapshot will be transfered to**
 
-4. 18106
+4. 
 
 To get the `urls` PTS should be transfered to 
 
@@ -67,7 +67,7 @@ Example of PT:
 
 ### **Lookup the appropriate "timeout" for getting PTU**
 
-5. 18114
+5. 
 
 To define the timeout to wait for a response on PTU
 
@@ -97,9 +97,9 @@ Example of PT:
 
 ### **Sending Policy Table Snapshot to backend/mobile application**
 
-6. 18176
+6. 
 
-SDL must 
+PoliciesManager
 
 send PTS snapshot as a binary data via OnSystemRequest mobile API from the system to backend. 
 
@@ -109,7 +109,7 @@ Note: If no `url` is provided in Local Policy Table, it is supposed that mobile 
 
 ### **Start "timeout" countdown for getting an answer with Policy Table Update**
 
-7. 18179
+7. 
 
 PoliciesManager must 
 
@@ -117,11 +117,11 @@ start timeout taken from `timeout_after_x_seconds` field of LocalPT right after 
 
 ### **Start "timeout" countdown**
 
-8. nnn
+8. 
 
 PoliciesManager must 
 
-stop timeout started right after OnSystemRequest is sent out to mobile app in case SDL.OnReceivedPolicyUpdate comes from HMI.
+stop timeout started right after OnSystemRequest is sent out to mobile app in case SDL.OnReceivedPolicyUpdate comes from HMI
 
 ## Processing an answer from a backend
 ### **Getting Policy Table Update on SDL**
@@ -136,19 +136,19 @@ stop the timer of PTU "timeout" and Base64-decode the payload, which is the Poli
 
 ### **SDL performs the validation of Policy Table Update**
 
-10. 18184
+10. 
 
 After Base-64 decoding
 
 SDL must 
 validate the Policy Table Update against Policy_Table_Data_Dictionar.xlsx statuses of optional, required, or omitted:
 
-1) Validation must reject a policy table update if it include fields with a status of ‘omitted’
-2) Validation must reject a policy table update if it does not include fields with a status of ‘required’
+1) Validation must reject a policy table update if it include fields with a status of 'omitted'
+2) Validation must reject a policy table update if it does not include fields with a status of 'required'
 
 ### **Policy Table Update validation failure exception**
 
-11. 18187
+11. 
 
 In case PTU validation fails
 
@@ -159,7 +159,7 @@ SDL must
 
 ### **Change PolicyUpdate status to UP_TO_DATE**
 
-12. 18803
+12. 
 
 Right after successful validation of received PTU
 
@@ -169,11 +169,11 @@ change the status to `UP_TO_DATE` and notify HMI with OnStatusUpdate(`UP_TO_DATE
 
 ### **Merge of Policy Table Update into Local Policy Table**
 
-13. 18190
+13. 
 
 In case of successful PTU validation   
 
-SDL must 
+PoliciesManager must
 
 replace the following sections of the Local Policy Table with the corresponding sections from PTU:
 * `module_config`,
@@ -182,19 +182,19 @@ replace the following sections of the Local Policy Table with the corresponding 
 
 ### **Merge of Policy Table Update into Local Policy Table ("consumer_friendly_messages")**
 
-14. 18192
+14. 
 
 In case 
 
 the `consumer_friendly_messages` section of PTU contains a `messages` subsection  
 
-SDL must
+PoliciesManager must
 
 replace the `consumer_friendly_messages` portion of the Local Policy Table with the same section from PTU
 
 Note: Refer Data Dictionary for Policy Table structure information
 
-15. 22734
+15. 
 
 In case the Updated PT omits `consumer_friendly_messages` section, 
 

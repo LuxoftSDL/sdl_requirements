@@ -249,3 +249,38 @@ or
 2) Validation failure against Data Dictionary
 
 #### DecryptCertificate
+21. 
+In case 
+
+SDL gets an Updated PT with non-empty "certificate" field  
+
+SDL must 
+
+- copy the value from "certificate" field to the file named "certificate" and
+- store it in the folder defined by existing `AppStorageFolder` param
+
+22. 
+In case 
+
+SDL stores the `certificate` file
+
+SDL must 
+
+send BC.DecryptCertificate_request with the path to `certificate` file to HMI
+
+23. 
+In case 
+
+SDL receives successful BC.DecryptCertificate_response from HMI  
+
+SDL must 
+copy the decrypted certificate from the file to the "certificate" field of the policy database
+
+24. 
+In case 
+
+SDL has copied the decrypted certificate from the file to the "certificate" field of the policy database 
+
+SDL must 
+
+remove the file

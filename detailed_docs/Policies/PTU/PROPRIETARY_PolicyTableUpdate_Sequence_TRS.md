@@ -141,8 +141,8 @@ SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag o
 and HMI sends BC.OnSystemRequest (PROPRIETARY, fileName: `<path to Snapshot`>, url, appID)
 
 SDL must
-
-send OnSystemRequest to the specified `appID` app with Snapshot and Binary Header (below) in payload
+- add field with HTTP Headers data
+- send OnSystemRequest to the specified `appID` app with Snapshot and Binary Header (below) in payload to mobile app
 
 ```
  {
@@ -274,7 +274,6 @@ SDL must
 
 replace the `consumer_friendly_messages` portion of the Local Policy Table with the same section from PTU
 
-Note: Refer Data Dictionary for Policy Table structure information
 
 ## Diagrams
 
