@@ -102,7 +102,7 @@ To get the urls PTS should be transfered to
 
 Policies manager must 
 
-refer PTS `endpoints` section, key `0x07`> key `default` and key(s) app id which correspond to policyAppID(s) of the application(s) being connected to SDL now. The values must be provided in SDL.GetPolicyConfigurationData(`endpoints`) reponse.
+refer PTS `endpoints` section, key `0x07`> key `default` and key(s) app id which correspond to policyAppID(s) of the application(s) being connected to SDL now. The values must be provided in SDL.GetPolicyConfigurationData(`endpoints`) response.
 
 Example of PT
 ```
@@ -124,10 +124,13 @@ Example of PT
 10. 
 When got from SyncP, 
 
-SDL must forward OnSystemRequest(request_type=PROPRIETARY, url, appID) with encrypted PTS snapshot as a hybrid data to mobile application with `appID` value.  
+SDL must 
+
+forward OnSystemRequest(request_type=PROPRIETARY, url, timeout, appID) with encrypted PTS snapshot as a hybrid data to mobile application with `appID` value.  
 `fileType` must be assigned as "JSON" in mobile app notification.
 
-Note: SDL resends the `url` parameter to mobile app via OnSystemRequest only in case it receives `url` parameter within BasicCommunication.OnSystemRequest from SyncPManager (HMI_API).
+Note1: In case OnSystemRequest() is sent with "default appID" number, SDL must forward the notification with encrypted PTS snapshot as a hybrid data to connected mobile application `appID`
+Note2: SDL resends the `url` parameter to mobile app via OnSystemRequest only in case it receives `url` parameter within BasicCommunication.OnSystemRequest from SyncPManager (HMI_API).
 If SyncP doesn't send any URLs to SDL, it is supposed that mobile application will sent Policy Table Update data back to SDL.
 
 HMI Note1: It's HMI responsibility to encrypt PTS file and provide it to SDL via OnSystemRequest (HMI API `fileName` parameter).
@@ -136,39 +139,17 @@ HMI Note2: It's HMI responsibility to choose an application for sending PTU and 
 
 HMI Note3: HMI is responsible for initiating retry sequence. (see also [PolicyTableUpdate_Retry_Sequence]()]
 
-Example:
-```
-0_RetryTimeout = retry[0] + timeout;
-1st_RetryTimeout = 0_RetryTimeout + retry[1] + timeout
-2nd_RetryTimeout =1st_RetryTimeout + retry[2] +timeout
-..
-etc
-```
 HMI Note4: HMI is responsible for removing Policy Table Snapshot when retry sequence is over.
 
 ### Sending Policy Table Snapshot to backend/mobile application (got appID as "default" from HMI)
 11. 
-On getting OnSystemRequest(request_type=PROPRIETARY, url, timeout, appID) with "default appID" number  
 
-SDL must  
-
-forward OnSystemRequest(request_type=PROPRIETARY, url, timeout, appID) with encrypted PTS snapshot as a hybrid data to connected mobile application `appID`
-
-Note: SDL resends the 'url' parameter to mobile app via OnSystemRequest only in case it receives 'url' parameter within BasicCommunication.OnSystemRequest from SyncPManager (HMI_API).
-
-If HMI doesn't send any URLs to SDL, it is supposed that mobile application will sent Policy Table Update data back to SDL.
-
-HMI Note1: It's HMI responsibility to encrypt and encode PTS file and provide it to SDL via OnSystemRequest HMI API ("filename") parameter.
-
-HMI Note2: It's HMI responsibility to choose an application for sending PTU and start timer (for future retry strategy) after sending OnSystemRequest to SDL.
-
-12.
 PoliciesManager must
 
 stop the timeout started right after sending OnStatusUpdate to HMI in case SDL.OnReceivedPolicyUpdate comes from HMI
 
 ### Processing a response from a backend
-13. 
+12. 
 Upon receiving the response from the application via SystemRequest(requestType=PROPRIETARY)  
 
 SDL must
@@ -177,11 +158,11 @@ SDL must
 - notify HMI with SystemRequest(requestType=PROPRIETARY, fileName, appID) about PTU has been obtained
 
 HMI Note1: It's HMI responsibility to decode and decrypt the contents of Policy Table Update  
-HMI Note2: On decoding and encrypting the PTU, HMI must_notify SDL with SDL.OnReceivedPolicyUpdate(policyfile)  
-HMINote3: SDL generates the name for file with stored binary data by itself and add the Integer value to each <fileName>, e.g. `<1fileName>`(applicable for IVSU and PROPRIETARY requestTypes)
+HMI Note2: On decoding and decrypting the PTU, HMI must_notify SDL with SDL.OnReceivedPolicyUpdate(policyfile)  
+HINote3: SDL generates the name for file with stored binary data by itself and add the Integer value to each <fileName>, e.g. `<1fileName>`(applicable for IVSU and PROPRIETARY requestTypes)
  
 #### PTU Validation
-14. 
+13. 
 After getting OnReceivedPolicyUpdate (`policyFile`) from HMI
 
 SDL must
@@ -193,14 +174,14 @@ SDL must
 
 Note: In case section with required status "optional/omitted" is ommited in Updated PT, and a field of this section is marked as required, the validation of the mentioned field is not "required" (i.e. policy table must be considered as valid).
 
-15.
+14. 
 Right after successful validation of received PTU
 
 PoliciesManager must
 
 change the status to UP_TO_DATE and notify HMI with OnStatusUpdate(UP_TO_DATE)
 
-16.
+15. 
 In case PTU validation fails
 
 SDL must
@@ -211,7 +192,7 @@ SDL must
 
 #### PTU merge
 #### PTU merge into Local Policy Table
-17. 
+16. 
 
 In case of successful PTU validation   
 
@@ -222,7 +203,7 @@ replace the following sections of the Local Policy Table with the corresponding 
 * `functional_groupings`,
 * `app_policies`
 
-18. 
+17. 
 
 In case 
 
@@ -232,15 +213,17 @@ SDL must
 
 replace the `consumer_friendly_messages` portion of the Local Policy Table with the same section from PTU
 
-19. 
-In case the Updated PT omits `consumer_friendly_messages` section  
+18. 
+In case 
+
+the Updated PT omits `consumer_friendly_messages` section  
 
 PoliciesManager must 
 
 maintain the current `consumer_friendly_messages` section in Local PT.
 
 #### PTU file removal on PTU sequence end
-20. 
+19. 
 	
 Policies Manager must delete the file with Policy Table Update (got by SDL.OnReceivedPolicyUpdate) for the both cases:
 
@@ -249,7 +232,7 @@ or
 2) Validation failure against Data Dictionary
 
 #### DecryptCertificate
-21. 
+20. 
 In case 
 
 SDL gets an Updated PT with non-empty "certificate" field  
@@ -259,7 +242,7 @@ SDL must
 - copy the value from "certificate" field to the file named "certificate" and
 - store it in the folder defined by existing `AppStorageFolder` param
 
-22. 
+21. 
 In case 
 
 SDL stores the `certificate` file
@@ -268,7 +251,7 @@ SDL must
 
 send BC.DecryptCertificate_request with the path to `certificate` file to HMI
 
-23. 
+22. 
 In case 
 
 SDL receives successful BC.DecryptCertificate_response from HMI  
@@ -276,7 +259,7 @@ SDL receives successful BC.DecryptCertificate_response from HMI
 SDL must 
 copy the decrypted certificate from the file to the "certificate" field of the policy database
 
-24. 
+23. 
 In case 
 
 SDL has copied the decrypted certificate from the file to the "certificate" field of the policy database 
@@ -284,3 +267,7 @@ SDL has copied the decrypted certificate from the file to the "certificate" fiel
 SDL must 
 
 remove the file
+
+## Diagrams
+
+![PTU_EXTERNAL_PROPRIETARY](../accessories/PTU_EXTERNAL_PROPRIETARY.png)

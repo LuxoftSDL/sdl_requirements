@@ -97,7 +97,7 @@ Policy Manager must
 
 restart retry sequence within the same ignition cycle
 
-_See also [PTU triggers]()_
+_See also [PTU triggers](/PTU_Triggers.md)_
 
 8. 
 In case 
@@ -175,7 +175,7 @@ SDL must
 
 ## Diagrams
 
-[PTU Retry Proprietary Flow ](accessories/Retry_Proprietary.png)
+[PTU Retry Proprietary Flow](../accessories/Retry_Proprietary.png)
 
 
-[PTU Retry External Proprietary Flow](./Retry_External_Proprietary.png)
+[PTU Retry External Proprietary Flow](../accessories/Retry_External_Proprietary.png)

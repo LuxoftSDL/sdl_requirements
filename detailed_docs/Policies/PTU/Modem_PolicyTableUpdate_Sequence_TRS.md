@@ -51,10 +51,6 @@ SDL must
 ## Diagrams
 ### PTU using in-vehicle modem 
 
-|||
-![PTU_Proprietary_modem_success](./PTU_PROPRIETARY_modem_success.png)
-|||
+![PTU_Proprietary_modem_success](../accessories/PTU_PROPRIETARY_modem_success.png)
 
-|||
-![PTU_Proprietary_modem_fail](./PTU_PROPRIETARY_modem_failure.png)
-|||
+![PTU_Proprietary_modem_fail](../accessories/PTU_PROPRIETARY_modem_failure.png)

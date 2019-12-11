@@ -278,16 +278,12 @@ replace the `consumer_friendly_messages` portion of the Local Policy Table with 
 ## Diagrams
 
 ### PROPRIETARY - PTU using mob app  
-|||
-![PTU_Proprietary](./PTU_PROPRIETARY.png)
-|||
+![PTU_Proprietary](../accessories/PTU_PROPRIETARY.png)
 
 ### PROPRIETARY - PTU using in-vehicle modem 
 
-|||
-![PTU_Proprietary_modem_success](./PTU_PROPRIETARY_modem_success.png)
-|||
+![PTU_Proprietary_modem_success](../accessories/PTU_PROPRIETARY_modem_success.png)
 
-|||
-![PTU_Proprietary_modem_fail](./PTU_PROPRIETARY_modem_failure.png)
-|||
+
+![PTU_Proprietary_modem_fail](../accessories/PTU_PROPRIETARY_modem_failure.png)
+

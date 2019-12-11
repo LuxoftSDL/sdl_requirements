@@ -204,7 +204,5 @@ maintain the current `consumer_friendly_messages` section in Local PT.
 
 ## Diagrams
 
-### PROPRIETARY - PTU using mob app  
-|||
-![PTU_HTTP](assessories/././PTU_HTTP.png)
-|||
+![PTU_HTTP](../accessories/PTU_HTTP.png)
+
