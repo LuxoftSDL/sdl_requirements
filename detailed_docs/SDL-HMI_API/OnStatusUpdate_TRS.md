@@ -2,7 +2,7 @@
 
 ### General info
 1. 
-PoliciesManager must
+SDL must
 
 notify HMI via SDL.OnStatusUpdate() notification  
 
@@ -12,9 +12,9 @@ right after one of the statuses of `UPDATING`, `UPDATE_NEEDED` and `UP_TO_DATE` 
 
 In case  
 
-any PolicyTableUpdate trigger happens (_see also [PTU triggers]()_)
+any PolicyTableUpdate trigger happens (_see also [PTU triggers](./Policies/PTU/PTU_Triggers.md)_)
 
-PoliciesManager must
+SDL must
 
 - SDL.OnStatusUpdate(UPDATE_NEEDED) to HMI
 - create PTSnaphot
@@ -28,7 +28,7 @@ SDL sent BC.PolicyUpdate(path_to_PTS)
 
 and **HMI responds** BC.PolicyUpdate(SUCCESS)
 
-PoliciesManager must
+SDL must
 
 send SDL.OnStatusUpdate(UPDATING) to HMI
 
@@ -40,7 +40,7 @@ SDL is built with HTTP flag
 
 Upon creating PTSnaphot
 
-PoliciesManager must
+SDL must
 
 - send SDL.OnStatusUpdate(UPDATING) to HMI
 - send OnSystemRequest(PTS_in_binary) to mob app
@@ -55,7 +55,7 @@ PTU passes successfully
 
 and **HMI sends** valid updated PT via SDL.OnReceivedPolicyUpdate()
 
-PoliciesManager must
+SDL must
 - merge PTU into Local PT
 - send SDL.OnStatusUpdate(UP_TO_DATE) to HMI
 
@@ -69,7 +69,7 @@ PTU passes successfully
 
 and **mob app sends** valid updated PT via SystemRequest(PTU_in_binary_data)
 
-PoliciesManager must
+SDL must
 - merge PTU into Local PT
 - send SDL.OnStatusUpdate(UP_TO_DATE) to HMI
 
@@ -80,15 +80,13 @@ PoliciesManager must
 
 In case 
 
-SDL is built with PROPRIETARY or EXTERNAL_PROPRIETARY flag  
-
-and an app (App_1) registers in the first ign cycle from consented device (-> PTU is triggered)
+an app (App_1) registers in the first ign cycle from consented device (-> PTU is triggered)
 
 and PTU retry sequence is finished unsuccessfully with UPDATE_NEEDED status
 
 and another app (App_2) registers (-> new PTU trigger)
 
-PoliciesManager must
+SDL must
 
 - send SDL.OnStatusUpdate(UPDATE_NEEDED) to HMI
 - create PTSnaphot and run PTU
@@ -98,20 +96,21 @@ PoliciesManager must
 6. 
 
 In case 
-
-SDL is built with PROPRIETARY or EXTERNAL_PROPRIETARY flag  
-
+ 
 an app (App_1) registers in the first ign cycle from consented device, 
 
 PTU retry sequence is in progress
 
 and a new application (App_2) registers during the retry sequence
 
-PoliciesManager must
+SDL must
 
  - send SDL.OnStatusUpdate(UPDATE_NEEDED, UPDATING) to HMI
- - send BC.PolicyUpdate request to HMI to start the new PTU sequence after retry
+ - send request* to start the new PTU sequence after retry
 
+ _Info: 
+ a. * if SDL is built with PROPRIETARY or EXTERNAL_PROPRIETARY flag -> SDL sends BC.PolicyUpdate to HMI  
+ b. * if SDL is built with HTTP flag -> SDL sends OnSystemRequest to mob app_
 
 ## Non-functional requirements
 HMI API

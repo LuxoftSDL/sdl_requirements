@@ -7,7 +7,7 @@ In case
 
 an `appID` of a registered app is not listed on the LPT
 
-The PoliciesManager must 
+SDL must 
 
 request an update to its Local Policy Table(LPT)
 
@@ -17,7 +17,7 @@ In case
 
 upon any Ign_On the stored status of PTUpdate is `UPDATE_NEEDED`
 
-PoliciesManager must 
+SDL must 
 
 trigger a PolicyTableUpdate sequence
 
@@ -39,11 +39,9 @@ Note: In case `certificate` exists on a file system (files location are defined 
 4. 
 In case
 
-SDL is built with any value of "DEXTENDED_POLICY" flag or without this flag at all  
+the current date is 24 hours prior to module's certificate expiration date
 
-and the current date is 24 hours prior to module's certificate expiration date
-
-PoliciesManager must 
+SDL must 
 
 trigger a PolicyTable Update sequence
 
@@ -106,7 +104,7 @@ SDL is built with "DEXTENDED_POLICY:EXTERNAL_PROPRIETARY" flag
 
 and the device the application is running on is **consented** (_see also **User-consent in terms of Policies (EXTERNAL_PROPRIETARY flow**_)
 
-PoliciesManager must 
+SDL must 
 
 request an update to its Local Policy Table 
 
@@ -116,7 +114,7 @@ In case
 
 the app that has never received the updated policies registers from non-consented device
 
-PoliciesManager must 
+SDL must 
 
 initiate the 'device consent prompt' sequence on HMI
 
@@ -128,7 +126,7 @@ the app that has never received the updated policies registers from non-consente
 
 and then the User consents this device
 
-PoliciesManager must 
+SDL must 
 
 trigger a PolicyTableUpdate sequence
 
@@ -143,7 +141,7 @@ user requests PTU (e.g. from Settings Menu on HMI)
 
 and HMI sends SDL.UpdateSDL
 
-PoliciesManager must 
+SDL must 
 - respond SDL.OnStatusUpdate() to HMI 
 - process a PolicyTableUpdate sequence
 

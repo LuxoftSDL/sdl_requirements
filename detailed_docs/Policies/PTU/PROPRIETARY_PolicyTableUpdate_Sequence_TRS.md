@@ -5,7 +5,7 @@
 ### **Notification on PTU request**
 1.
 
-PoliciesManager must 
+SDL must 
 
 notify HMI via SDL.OnStatusUpdate(UPDATE_NEEDED) on any PTU trigger
 
@@ -16,7 +16,7 @@ _Note: the source of the PolicyTableUpdate is the Policies Cloud._
 
 To create Policy Table Snapshot 
 
-PoliciesManager must 
+SDL must
 
 copy the Local Policy Table into memory and remove `messages` sub-section from `consumer_friendly_messages` section (See data dictionary for more details).
 
@@ -29,8 +29,7 @@ b. `messages` sub-section is excluded from PTS with the purpose to limit the siz
 
 In case
 
-SDL is built with "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all
-and PolicyTableUpdate is triggered 
+PolicyTableUpdate is triggered 
 
 SDL must
 send BC.PolicyUpdate (`path to SnapshotPolicyTable`, `timeout from policies`, `set of retry timeouts`) to HMI
@@ -39,7 +38,7 @@ send BC.PolicyUpdate (`path to SnapshotPolicyTable`, `timeout from policies`, `s
 
 Upon receiving BC.PolicyUpdate (SUCCESS) response from HMI
 
-PoliciesManager must 
+SDL must
 
 - change the status from `UPDATE_NEEDED` to `UPDATING` 
 - and notify HMI with OnStatusUpdate(`UPDATING`)  
@@ -57,7 +56,7 @@ start timeout to wait for a response on PTU (taken from `timeout_after_x_seconds
 
 To define the timeout to wait for a response on PTU
 
-Policies manager must 
+SDL must
 
 refer PTS `module_config` section, key `timeout_after_x_seconds`
 
@@ -86,13 +85,11 @@ Example of PT:
 
 In case
 
-SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all
-
-and SDL gets SDL.GetPolicyConfigurationData (service: 7) from HMI
+SDL gets SDL.GetPolicyConfigurationData (service: 7) from HMI
 
 SDL must
 
-respond SDL.GetPolicyConfigurationData_response (SUCCESS, endpoints:<value of endpoints in JSON format>) to HMI
+respond SDL.GetPolicyConfigurationData_response (SUCCESS, "module_config", property = "endpoints") to HMI
 
 _Information_
 Related policies section:
@@ -111,7 +108,7 @@ Related policies section:
 
 To get the `urls` PTS should be transfered to 
 
-Policies Manager must 
+SDL must 
 
 refer PTS `endpoints` section, key "0x07" for the appropriate `<app id>` which was chosen for PTS transferring
 
@@ -136,9 +133,7 @@ Example of PT:
 
 In case
 
-SDL is built with "DEXTENDED_POLICY: ON" "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all
-
-and HMI sends BC.OnSystemRequest (PROPRIETARY, fileName: `<path to Snapshot`>, url, appID)
+HMI sends BC.OnSystemRequest (PROPRIETARY, fileName: `<path to Snapshot`>, url, appID)
 
 SDL must
 - add field with HTTP Headers data
@@ -171,7 +166,7 @@ a. OnSystemRequest with SnapshotPT (= binary data) should be sent over "Bulk" Se
 
 10. 
 
-Policies Manager must 
+SDL must
 
 randomly select the application through which to send the Policy Table packet
 and request an update to its Local Policy Table only through apps with HMI status of BACKGROUND, LIMITED, and FULL.
@@ -185,19 +180,16 @@ In case
 
 BC.OnSystemRequest is received without `appID`
 
-PoliciesManager must 
+SDL must
 
 stop the timeout started right after sending OnStatusUpdate to HMI
 in case SDL.OnReceivedPolicyUpdate comes from HMI
 
-
 ### Processing a response from a backend
 
-12. 
-	
+12. 	
 In case  
-SDL is built with "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all  
-and SDL has sent OnSystemRequest with SnapshotPT to mobile app  
+SDL has sent OnSystemRequest with SnapshotPT to mobile app  
 and SDL gets SystemRequest with UpdatedPT in payload during `timeout_after_x_seconds` value taken from Policy Database and started after OnSystemRequest sending out to mobile app
 
 SDL must
@@ -214,8 +206,7 @@ d. If SystemRequest is not received during `timeout_after_x_seconds`, SDL should
 13. 
 
 In case  
-SDL is built with "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all  
-and SDL has sent BasicCommunication.SystemRequest to HMI  
+SDL has sent BasicCommunication.SystemRequest to HMI  
 and SDL gets BasicCommunication.SystemRequest_response (`<resultCode>`) during "SDL timeout for HMI requests" (= 10 sec by default) from HMI
 
 SDL must
@@ -226,8 +217,7 @@ a. If SDL's timeout is expired with no response from HMI, SDL responds with GENE
 
 14. 
 In case  
-SDL is built with "-DEXTENDED_POLICY: PROPRIETARY" flag or without this flag at all  
-and SDL gets SDL.OnReceivedPolicyUpdate (`<path to UpdatedPT>`) from HMI
+SDL gets SDL.OnReceivedPolicyUpdate (`<path to UpdatedPT>`) from HMI
 
 SDL must  
 apply the valid UpdatedPT to Policy Database
@@ -238,7 +228,7 @@ apply the valid UpdatedPT to Policy Database
 
 Right after successful validation of received PTU
 
-PoliciesManager must 
+SDL must
 
 change the status to `UP_TO_DATE` and notify HMI with OnStatusUpdate(`UP_TO_DATE`)
 

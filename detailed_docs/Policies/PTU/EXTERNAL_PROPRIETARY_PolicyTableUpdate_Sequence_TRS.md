@@ -3,7 +3,7 @@
 ### **Notification on PTU request**
 1.
 
-PoliciesManager must 
+SDL must 
 
 notify HMI via SDL.OnStatusUpdate(UPDATE_NEEDED) on any PTU trigger
 
@@ -13,7 +13,7 @@ notify HMI via SDL.OnStatusUpdate(UPDATE_NEEDED) on any PTU trigger
 2. 
 To create Policy Table Snapshot 
 
-PoliciesManager must 
+SDL must
 
 copy the Local Policy Table into memory and remove `messages` sub-section from `consumer_friendly_messages` section (See data dictionary for more details).
 
@@ -24,9 +24,9 @@ b. `messages` sub-section is excluded from PTS with the purpose to limit the siz
 ### PTS storage on a file system
 3. 
 	
-PoliciesManager must   
+SDL must 
 
-store the PT snapshot as a JSON file which filename is defined in `PathToSnapshot` parameter of smartDeviceLink.ini file.
+store the PT snapshot as a JSON file which filename is defined in `PathToSnapshot` parameter of smartDeviceLink.ini file
 
 ```
 [Policy]
@@ -39,6 +39,7 @@ Note: filepath is defined in "SystemFilesPath"
 ### Sending path to Policy Table Snapshot to HMI
 4. 
 In case
+
 PolicyTableUpdate is triggered
 
 SDL must 
@@ -48,7 +49,7 @@ send BC.PolicyUpdate (path to SnapshotPolicyTable) to HMI for future PTS encrypt
 5.
 Upon receiving BC.PolicyUpdate (SUCCESS) response from HMI
 
-PoliciesManager must 
+SDL must 
 
 - change the status from `UPDATE_NEEDED` to `UPDATING` 
 - and notify HMI with OnStatusUpdate(`UPDATING`)
@@ -57,7 +58,7 @@ PoliciesManager must
 6.
 Upon sending OnStatusUpdate(`UPDATING`) to HMI 
 
-PoliciesManager must 
+SDL must
 
 start timeout to wait for a response on PTU (taken from `timeout_after_x_seconds` field of LocalPT) 
 
@@ -67,7 +68,7 @@ In case
 
 HMI sends a request via SDL.GetPolicyConfigurationData("module_config", property = "endpoints")
 
-PoliciesManager must  
+SDL must  
 
 respond with the list of pairs URLs taken from Local PT and appropriate internal appIDs (if exist) only for the applications being now connected to SDL.
 
@@ -75,7 +76,7 @@ respond with the list of pairs URLs taken from Local PT and appropriate internal
 8. 
 To get the urls PTS should be transfered to
 
-Policies Manager must
+SDL must
 
 refer `module_config` section > `endpoints` sub-section > parent key `0x07`> key `default` in case there's no application connected at the moment.
 
@@ -100,7 +101,7 @@ Example of PT section
 9. 
 To get the urls PTS should be transfered to
 
-Policies manager must 
+SDL must
 
 refer PTS `endpoints` section, key `0x07`> key `default` and key(s) app id which correspond to policyAppID(s) of the application(s) being connected to SDL now. The values must be provided in SDL.GetPolicyConfigurationData(`endpoints`) response.
 
@@ -144,7 +145,7 @@ HMI Note4: HMI is responsible for removing Policy Table Snapshot when retry sequ
 ### Sending Policy Table Snapshot to backend/mobile application (got appID as "default" from HMI)
 11. 
 
-PoliciesManager must
+SDL must
 
 stop the timeout started right after sending OnStatusUpdate to HMI in case SDL.OnReceivedPolicyUpdate comes from HMI
 
@@ -177,7 +178,7 @@ Note: In case section with required status "optional/omitted" is ommited in Upda
 14. 
 Right after successful validation of received PTU
 
-PoliciesManager must
+SDL must
 
 change the status to UP_TO_DATE and notify HMI with OnStatusUpdate(UP_TO_DATE)
 
@@ -218,7 +219,7 @@ In case
 
 the Updated PT omits `consumer_friendly_messages` section  
 
-PoliciesManager must 
+SDL must
 
 maintain the current `consumer_friendly_messages` section in Local PT.
 

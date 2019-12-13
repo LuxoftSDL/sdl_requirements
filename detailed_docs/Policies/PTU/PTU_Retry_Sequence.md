@@ -13,7 +13,7 @@ In case
 
 PoliciesManager does not receive the Updated PT during time defined in `timeout_after_x_seconds` section of Local PT 
 
-PoliciesManager must
+SDL must
 
 start the retry sequence
 
@@ -22,7 +22,7 @@ In case
 
 the timeout taken from `timeout_after_x_seconds` field of LocalPT or `timeout between retries` is expired before PoliciesManager receives SystemRequest with PTU from mobile application
 
-PoliciesManager must 
+SDL must 
 - change the status to `UPDATE_NEEDED` and 
 - notify HMI with OnStatusUpdate(`UPDATE_NEEDED`) 
 
@@ -31,7 +31,7 @@ In case
 
 the corresponding retry timeout expires 
 
-PoliciesManager must 
+SDL must 
 
 send the new PTU request to mobile app until successful Policy Table Update has completed or  
 the number of retry attempts is limited by the number of elements in `seconds_between_retries` section of LPT is exhausted
@@ -63,17 +63,18 @@ Note
 
 
 5. 
-The PoliciesManager shall cycle through the list of URLs, using the next one in the list for every new policy table request over a retry sequence.  
+SDL shall cycle through the list of URLs, using the next one in the list for every new policy table request over a retry sequence.  
 
 In case of the only URL in Local Policy Table, it must always be the destination for a Policy Table Snapshot.
 
 ## Сonsequitive PTU attempts
+### Initiating PTU the next ignition cycle
 6. 
 In case 
 
 the Policy Table exchange is unsuccessful after the Retry Sequence is completed
 
-Policy Manager must 
+SDL must 
 
 initiate the new PT exchange sequence upon the next ignition on.
 
@@ -93,9 +94,9 @@ In case
 
 anything triggers Policy Table Update request
 
-Policy Manager must 
+SDL must 
 
-restart retry sequence within the same ignition cycle
+start new PTU sequence within the same ignition cycle
 
 _See also [PTU triggers](/PTU_Triggers.md)_
 
@@ -106,28 +107,16 @@ the "24 hours" trigger worked, but valid PTU does not bring a certificate
 
 SDL should 
 
-NOT perform a PTU sequence for getting the PT with a certificate
-
-### Initiating PTU the next ignition cycle 
-9. 
-
-In case 
-
-the policy table exchange is unsuccessful after the retry strategy is completed
-
-Policy Manager must 
-
-initiate the new PT exchange sequence upon the next ignition on.
-
+NOT perform an additional PTU sequence for getting the PT with a certificate
 
 ### Conditions for PTU within the same IGN cycle after retry sequence failed
-10. 
+9. 
 
 In case 
 
 anything triggers Policy Table Update request
 
-Policy Manager must 
+SDL must 
 
 - start PTU sequence 
 
@@ -144,7 +133,7 @@ In case
 
 the timeout taken from `timeout_after_x_seconds` field of LocalPT is expired before PoliciesManager receives SDL.OnReceivedPolicyUpdate from HMI
 
-PoliciesManager must  
+SDL must  
 
 notify HMI with OnStatusUpdate(`UPDATE_NEEDED`)   
 

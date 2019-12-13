@@ -6,7 +6,7 @@
 
 1. 
 
-PoliciesManager must 
+SDL must
 
 notify HMI via SDL.OnStatusUpdate(UPDATE_NEEDED) on any PTU trigger
 
@@ -19,7 +19,7 @@ _Note: the source of the PolicyTableUpdate is the Policies Cloud._
 
 To create Policy Table Snapshot 
 
-PoliciesManager must 
+SDL must
 
 copy the Local Policy Table into memory and remove `messages` sub-section from `consumer_friendly_messages` section (See data dictionary for more details).
 
@@ -31,7 +31,7 @@ b. `messages` sub-section is excluded from PTS with the purpose to limit the siz
 
 3. 
 
-Policies Manager must 
+SDL must
 
 - randomly select the application through which to send the Policy Table packet and 
 - request an update to its Local Policy Table only through apps with HMI status of BACKGROUND, LIMITED, and FULL.
@@ -45,7 +45,7 @@ If there are no mobile apps with any of these statuses, the system must use an a
 
 To get the `urls` PTS should be transfered to 
 
-Policies Manager must 
+SDL must 
 
 refer PTS `endpoints` section, key "0x07" for the appropriate `<app id>` which was chosen for PTS transferring
 
@@ -71,7 +71,7 @@ Example of PT:
 
 To define the timeout to wait for a response on PTU
 
-Policies manager must 
+SDL must 
 
 refer PTS `module_config` section, key <timeout_after_x_seconds>
 
@@ -99,7 +99,7 @@ Example of PT:
 
 6. 
 
-PoliciesManager
+SDL must
 
 send PTS snapshot as a binary data via OnSystemRequest mobile API from the system to backend. 
 
@@ -111,7 +111,7 @@ Note: If no `url` is provided in Local Policy Table, it is supposed that mobile 
 
 7. 
 
-PoliciesManager must 
+SDL must 
 
 start timeout taken from `timeout_after_x_seconds` field of LocalPT right after OnSystemRequest is sent out to mobile app.
 
@@ -119,7 +119,7 @@ start timeout taken from `timeout_after_x_seconds` field of LocalPT right after 
 
 8. 
 
-PoliciesManager must 
+SDL must
 
 stop timeout started right after OnSystemRequest is sent out to mobile app in case SDL.OnReceivedPolicyUpdate comes from HMI
 
@@ -163,7 +163,7 @@ SDL must
 
 Right after successful validation of received PTU
 
-PoliciesManager must 
+SDL must 
 
 change the status to `UP_TO_DATE` and notify HMI with OnStatusUpdate(`UP_TO_DATE`)
 
@@ -173,7 +173,7 @@ change the status to `UP_TO_DATE` and notify HMI with OnStatusUpdate(`UP_TO_DATE
 
 In case of successful PTU validation   
 
-PoliciesManager must
+SDL must
 
 replace the following sections of the Local Policy Table with the corresponding sections from PTU:
 * `module_config`,
@@ -188,7 +188,7 @@ In case
 
 the `consumer_friendly_messages` section of PTU contains a `messages` subsection  
 
-PoliciesManager must
+SDL must
 
 replace the `consumer_friendly_messages` portion of the Local Policy Table with the same section from PTU
 
@@ -198,7 +198,7 @@ Note: Refer Data Dictionary for Policy Table structure information
 
 In case the Updated PT omits `consumer_friendly_messages` section, 
 
-PoliciesManager must 
+SDL must
 
 maintain the current `consumer_friendly_messages` section in Local PT.
 
