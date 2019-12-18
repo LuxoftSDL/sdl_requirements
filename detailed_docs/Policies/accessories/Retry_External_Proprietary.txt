@@ -36,5 +36,6 @@ SDL->Mobile: OnSystemRequest()
 SDL->SDL: Start timeout taken from "timeout_after_x_seconds" of Local PT
 SDL->HMI: SDL.OnStatusUpdate(UPDATING)
 
-note over HMI:When N_retry timeout expires\nHMI ends retry sequence (with the status of failed retry `UPDATE_NEEDED`)\nuntil the next ingnition cycle or a new PTU trigger 
+note over HMI:When N_retry timeout expires\nHMI ends retry sequence
+SDL->HMI: SDL.OnStatusUpdate(UPDATE_NEEDED)
 end 
