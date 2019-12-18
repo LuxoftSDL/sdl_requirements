@@ -113,7 +113,7 @@ Note: If no `url` is provided in Local Policy Table, it is supposed that mobile 
 
 SDL must 
 
-start timeout taken from `timeout_after_x_seconds` field of LocalPT right after OnSystemRequest is sent out to mobile app.
+start timeout taken from `timeout_after_x_seconds` field of LocalPT right after OnSystemRequest is sent out to mobile app
 
 ### **Start "timeout" countdown**
 
@@ -121,7 +121,7 @@ start timeout taken from `timeout_after_x_seconds` field of LocalPT right after 
 
 SDL must
 
-stop timeout started right after OnSystemRequest is sent out to mobile app in case SDL.OnReceivedPolicyUpdate comes from HMI
+stop timeout started right after SystemRequest is received from mobile app
 
 ## Processing an answer from a backend
 ### **Getting Policy Table Update on SDL**
