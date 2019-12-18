@@ -11,7 +11,7 @@ and SDL sent PTSnapshot to HMI
 
 HMI is expected to 
 - encrypt the PTS
-- send the encrypted PTS file to the defined `url` using either SDL and mob app or in-vegicle modem
+- send the encrypted PTS file to the defined `url` using either SDL and mob app or in-vehicle modem
 
 _HMI Note: In case HMI choses to use the modem, it should not use the OnSystemRequest itself and route the request through other channels to modem._
 

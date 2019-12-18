@@ -101,12 +101,13 @@ an app (App_1) registers in the first ign cycle from consented device,
 
 PTU retry sequence is in progress
 
-and a new application (App_2) registers during the retry sequence
+and a PTU trigger occurs (e.g. registration of a new app)
 
 SDL must
-
+ - postpone the second PTU sequence till the current is in progress
+ and after that start a new PTU sequence
  - send SDL.OnStatusUpdate(UPDATE_NEEDED, UPDATING) to HMI
- - send request* to start the new PTU sequence after retry
+ - send request* to start the new PTU sequence once retry sequence is over
 
  _Info: 
  a. * if SDL is built with PROPRIETARY or EXTERNAL_PROPRIETARY flag -> SDL sends BC.PolicyUpdate to HMI  
