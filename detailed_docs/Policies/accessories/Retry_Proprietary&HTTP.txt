@@ -34,7 +34,9 @@ note over SDL: t2_retry timeout **expried**\nno PTUpdate
 SDL->HMI: SDL.OnStatusUpdate(UPDATE_NEEDED)
 SDL-> Mobile: OnSystemRequest(timeout,url)
 SDL->HMI: SDL.OnStatusUpdate(UPDATING)
-note over SDL: Continue retry sequence until\na. PTU is successfully received or\nb. the number of the retries is exhausted\n (the status of failed retry is `UPDATE_NEEDED`)
+note over SDL: When N_retry timeout expires\nand retry attempts are exhausted,\nSDL ends retry sequence
+SDL ends retry sequence
+SDL->HMI: SDL.OnStatusUpdate(UPDATE_NEEDED)
 end 
 opt PTU retries were exhausted, PTU was not received in the ignition cycle
 note over Mobile,HMI: New ignition cycle 
