@@ -57,9 +57,9 @@ b. current model of backend implementation: `certificate` is always present in P
 	
 In case
 
-SDL is built with any value of "DEXTENDED_POLICY" flag or without this flag at all
+the amount of ignition cycles notified by HMI via BasicCommunication.OnIgnitionCycleOver 
 
-and the amount of ignition cycles notified by HMI via BasicCommunication.OnIgnitionCycleOver gets equal to the value of `exchange_after_x_ignition_cycles` field (`module_config` section) of policies database
+gets equal to the value of `exchange_after_x_ignition_cycles` field (`module_config` section) of policies database
 
 SDL must
 
@@ -70,10 +70,15 @@ trigger a PolicyTableUpdate sequence (and the flow will depend on the flag)
 	
 In case
 
-SDL is built with any value of "DEXTENDED_POLICY" flag or without this flag at all
+right after ignition on 
 
-and right after ignition on SDL gets OnVehcileData (`odometer`) notification from HMI  
-and the difference between current `odometer value_2` and `odometer value_1` when the previous UpdatedPollicyTable was applied is equal or greater than to the value of `exchange_after_x_kilometers` field (`module_config` section) of policies database
+SDL gets OnVehcileData (`odometer`) notification from HMI
+
+and the difference between 
+* the value of the current amount of kilometers and 
+* the stored amount of kilometers when the previous UpdatedPollicyTable was applied 
+
+is equal or greater than to the value of `exchange_after_x_kilometers` field (`module_config` section) of policies database
 
 SDL must
 
@@ -83,9 +88,12 @@ trigger a PolicyTableUpdate sequence
 7. 
 In case
 
-SDL is built with any value of "DEXTENDED_POLICY" flag or without this flag at all
+the difference between 
 
-and the difference between current `system time value_2` and `system time value_1` when the previous UpdatedPollicyTable was applied is equal or greater than to the value of `exchange_after_x_days` field (`module_config` section) of policies database
+* the current `system time value_2` and
+* `system time value_1` when the previous UpdatedPollicyTable was applied 
+
+is equal or greater than to the value of `exchange_after_x_days` field (`module_config` section) of policies database
 
 SDL must
 
@@ -160,9 +168,11 @@ SDL must
 - NOT send the PoliciesSnapshot over OnSystemRequest to any of the apps
 
 ## Diagrams
-
+#### ignition cycles
 ![ignition cycles](../accessories/PTU_trigger_ignition_cycles.png)
 
+#### odometer
 ![odometer](../accessories/PTU_trigger_kilometers.png)
 
+#### system time
 ![system time](../accessories/PTU_trigger_days.png)
