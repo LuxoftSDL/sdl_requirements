@@ -103,16 +103,7 @@ Related policies section:
       },
 ```
 
-### Getting `urls` PTS should be transfered to
-8. 
-
-To get the `urls` PTS should be transfered to 
-
-SDL must 
-
-refer PTS `endpoints` section, key "0x07" for the appropriate `<app id>` which was chosen for PTS transferring
-
-Example of PT:
+Example of PT with `<app id>`:
 ```
  "endpoints": {
         "0x07": {
@@ -127,9 +118,10 @@ Example of PT:
         }
       }
 ```
+
 ### HMI chooses to process PTU via mob app
 
-9.
+8.
 
 In case
 
@@ -164,7 +156,7 @@ _Information_
 a. OnSystemRequest with SnapshotPT (= binary data) should be sent over "Bulk" Service (15) to mobile app
 
 
-10. 
+9. 
 
 SDL must
 
@@ -175,19 +167,19 @@ and request an update to its Local Policy Table only through apps with HMI statu
 If there are no mobile apps with any of these statuses, the system must use an app with an HMI Level of NONE.
 
 
-11. 
+10. 
 In case 
 
-BC.OnSystemRequest is received without `appID`
+BC.OnSystemRequest is received from HMI within the timeout (taken from `timeout_after_x_seconds` field of LocalPT) 
 
 SDL must
 
-stop the timeout started right after sending OnStatusUpdate to HMI
-in case SDL.OnReceivedPolicyUpdate comes from HMI
+- restart the timeout (taken from `timeout_after_x_seconds` field of LocalPT)
+- send OnSystemRequest with SnapshotPT to mobile app
 
 ### Processing a response from a backend
 
-12. 	
+11. 	
 In case  
 SDL has sent OnSystemRequest with SnapshotPT to mobile app  
 and SDL gets SystemRequest with UpdatedPT in payload during `timeout_after_x_seconds` value taken from Policy Database and started after OnSystemRequest sending out to mobile app
@@ -203,7 +195,7 @@ b. UpdatedPT is not applied by SDL until OnReceivedPolicyUpdate notification fro
 c. SDL should expect SystemRequest with UpdatedPT (= binary data) over "Bulk" Service (15) from mobile app  
 d. If SystemRequest is not received during `timeout_after_x_seconds`, SDL should start the "Retry Sequence" 
 
-13. 
+12. 
 
 In case  
 SDL has sent BasicCommunication.SystemRequest to HMI  
@@ -215,7 +207,7 @@ send SystemRequest_response (`<resultCode from HMI response>`) to mobile app
 _Information_  
 a. If SDL's timeout is expired with no response from HMI, SDL responds with GENERIC_ERROR to mobile app
 
-14. 
+13. 
 In case  
 SDL gets SDL.OnReceivedPolicyUpdate (`<path to UpdatedPT>`) from HMI
 
@@ -224,7 +216,7 @@ apply the valid UpdatedPT to Policy Database
 
 #### PTU Validation
 
-15. 
+14. 
 
 Right after successful validation of received PTU
 
@@ -232,7 +224,7 @@ SDL must
 
 change the status to `UP_TO_DATE` and notify HMI with OnStatusUpdate(`UP_TO_DATE`)
 
-16. 
+15. 
 
 In case PTU validation fails
 
@@ -243,7 +235,7 @@ SDL must
 
 #### PTU merge
 
-17. 
+16. 
 
 In case of successful PTU validation   
 
@@ -254,7 +246,7 @@ replace the following sections of the Local Policy Table with the corresponding 
 * `functional_groupings`,
 * `app_policies`
 
-18. 
+17. 
 
 In case 
 
