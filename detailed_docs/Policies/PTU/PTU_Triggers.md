@@ -99,6 +99,16 @@ SDL must
 
 trigger a PolicyTableUpdate sequence
 
+#### trigger occuring during retry sequence
+
+8. 
+In case
+app_2 registers during app_1 PTU retry sequence 
+
+SDL must
+
+postpone new PTU sequence for app_2 until the previous one for app_1 is finished
+
 
 ### EXTERNAL_PROPRIETARY Specific
 

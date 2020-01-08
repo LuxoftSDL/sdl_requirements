@@ -87,14 +87,7 @@ Example of PT section
           "default": [
             "http://policies.telematics.ford.com/api/policies", 
               "http://cloud.ford.com/global"
-          ], 
-             "123": [
-            "http://policies.telematics.ford.com/api/policies", 
-            "http://policies.somedomain.ford.com/api/policies", 
-            "http://policies.anotherdomain.ford.com/api/policies", 
           ]
-        }
-      }
 ```
 
 ### Getting urls PTS should be transfered to (an app is registered)
@@ -127,8 +120,7 @@ When got from SyncP,
 
 SDL must 
 
-forward OnSystemRequest(request_type=PROPRIETARY, url, timeout, appID) with encrypted PTS snapshot as a hybrid data to mobile application with `appID` value.  
-`fileType` must be assigned as "JSON" in mobile app notification.
+forward OnSystemRequest(request_type=PROPRIETARY, url, timeout, appID) with encrypted PTS snapshot as a hybrid data to mobile application with `appID` value.
 
 Note1: In case OnSystemRequest() is sent with "default appID" number, SDL must forward the notification with encrypted PTS snapshot as a hybrid data to connected mobile application `appID`
 Note2: SDL resends the `url` parameter to mobile app via OnSystemRequest only in case it receives `url` parameter within BasicCommunication.OnSystemRequest from SyncPManager (HMI_API).
