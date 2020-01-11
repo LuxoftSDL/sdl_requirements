@@ -152,7 +152,7 @@ SDL must
 
 HMI Note1: It's HMI responsibility to decode and decrypt the contents of Policy Table Update  
 HMI Note2: On decoding and decrypting the PTU, HMI must_notify SDL with SDL.OnReceivedPolicyUpdate(policyfile)  
-HINote3: SDL generates the name for file with stored binary data by itself and add the Integer value to each <fileName>, e.g. `<1fileName>`(applicable for IVSU and PROPRIETARY requestTypes)
+HMI Note3: SDL generates the name for file with stored binary data by itself and add the Integer value to each <fileName>, e.g. `<1fileName>`(applicable for IVSU and PROPRIETARY requestTypes)
  
 #### PTU Validation
 13. 
@@ -165,7 +165,9 @@ SDL must
 1) Validation must reject a policy table update if it include fields with a status of ‘omitted’
 2) Validation must reject a policy table update if it does not include fields with a status of ‘required’
 
-Note: In case section with required status "optional/omitted" is ommited in Updated PT, and a field of this section is marked as required, the validation of the mentioned field is not "required" (i.e. policy table must be considered as valid).
+Note1: In case section with required status "optional/omitted" is ommited in Updated PT, and a field of this section is marked as required, the validation of the mentioned field is not "required" (i.e. policy table must be considered as valid).
+
+Note2: SDL shall ignore the unknown section/parameter in the updated PT.
 
 14. 
 Right after successful validation of received PTU

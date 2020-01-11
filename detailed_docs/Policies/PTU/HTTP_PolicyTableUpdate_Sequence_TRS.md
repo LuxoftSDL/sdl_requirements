@@ -47,7 +47,7 @@ To get the `urls` PTS should be transfered to
 
 SDL must 
 
-refer PTS `endpoints` section, key "0x07" for the appropriate `<app id>` which was chosen for PTS transferring
+refer LPT `endpoints` section, key "0x07" for the appropriate `<app id>` which was chosen for PTS transferring
 
 Example of PT:
 ```

@@ -59,7 +59,7 @@ In case
 
 the amount of ignition cycles notified by HMI via BasicCommunication.OnIgnitionCycleOver 
 
-gets equal to the value of `exchange_after_x_ignition_cycles` field (`module_config` section) of policies database
+gets equal or greater than the value of `exchange_after_x_ignition_cycles` field (`module_config` section) of policies database
 
 SDL must
 
