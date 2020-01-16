@@ -24,6 +24,25 @@ _Information:_
 a. The Policy Table Snapshot represents a Local Policy Table at a particular moment-in-time.  
 b. `messages` sub-section is excluded from PTS with the purpose to limit the size of a request payload.
 
+2.1
+
+To create Policy Table Snapshot 
+
+SDL must 
+
+include `schema_version` while requesting the policy update 
+
+_Information:_  
+a. Policy server would then compare the schema version received from cloud with what is available on server. Based on this comparison, vehicle data schema update would be sent in policy update response.
+
+2.2
+
+SDL must 
+
+include `schema_version` in `vehicle_data` only if `schema_items` schema is included
+
+Note: snapshot shall not include full details of `schema_items` within `vehicle_data`
+
 ### Sending path to Policy Table Snapshot to HMI
 3. 	
 
@@ -233,9 +252,193 @@ SDL must
 - discard the Policy Table Update with No notification of Cloud about invalid data
 - notify HMI with OnStatusUpdate(UPDATE_NEEDED)
 
+### Applying of the VehicleDataItems from PTU
+16. 
+
+In case
+preloaded file contains VehicleDataItems for all RPC spec VehicleData
+and PTU is performed with VehicleDataItems in update file
+
+SDL must
+- apply the update, saves it to DB
+- send OnPermissionChange with updated `VehicleData` to mobile app
+
+_Info_  
+a. VehicleDataItem - is the vehicle data item in question. e.g. gps, speed etc. SDL core would use this as the vehicle data param for requests from the app and to validate policies permissions.
+
+b. VehicleData item availability and definitions in the official SDL RPC Spec will always take precedence over custom ("proprietary") parameters.
+
+c. VehicleData items in the official SDL RPC Spec are immutable and therefore cannot be extended with proprietary data.
+
+d. All VehicleData items must be defined in the Policy Table (not just the custom/proprietary items), per recommendation by PM's Core team.
+
+17. 
+
+In case in a PTU
+
+there is custom data item that uses an enum that is not defined in a module's local RPC Spec
+
+SDL must 
+- perform NO validation on this parameter
+- pass enum data types as a raw string between the HMI and mobile device
+
+#### OEM Network Mapping table and Vehicle Data Schema versioning
+18. 
+
+In case 
+
+PTU contains OEM Network Mapping table
+
+SDL must 
+
+persist OEM Network Mapping version in local policy DB
+
+_Info_
+
+a. **OEM Network Mapping version** - is version variable for OEM Network Mapping table located in `module_config` -> `endpoint_properties`
+
+b. HMI needs to be able to read **OEM Network Mapping table version** value on demand so that it can control if and when to download the **OEM Network Mapping table**. HMI will utilize the _endpoint_ for OEM Network Mapping table file to download this file using _SystemRequest_ `requestType` _OEM_SPECIFIC_ and `requestSubType` _VEHICLE_DATA_MAPPING_. OEM Network Mapping table file would have _endpoint_ key (service) as _custom_vehicle_data_mapping_url_.
+
+Example for OEM Network Mapping table file `endpoint` and `version` in PTU
+
+```
+{  
+   "module_config":{  
+      "full_app_id_supported":true,
+      "exchange_after_x_ignition_cycles":100,
+      "exchange_after_x_kilometers":1800,
+      "exchange_after_x_days":30,
+      "timeout_after_x_seconds":60,
+      "seconds_between_retries":[  
+         1,
+         5,
+         25,
+         125,
+         625
+      ],
+      "endpoints":{  
+         "0x07":{  
+            "default":[  
+               "http://192.168.1.143:3001/api/v1/staging/policy"
+            ]
+         },
+         "0x04":{  
+            "default":[  
+               "http://localhost:3000/api/1/softwareUpdate"
+            ]
+         },
+         "queryAppsUrl":{  
+            "default":[  
+               "http://localhost:3000/api/1/queryApps"
+            ]
+         },
+         "lock_screen_icon_url":{  
+            "default":[  
+               "https://i.imgur.com/TgkvOIZ.png"
+            ]
+         },
+         "custom_vehicle_data_mapping_url":{  
+            "default":[  
+               "http://localhost:3000/api/1/vehicleDataMap"
+            ]
+         }
+      },
+      "endpoint_properties":{  
+         "custom_vehicle_data_mapping_url":{  
+            "version":"0.1.2"
+         }
+      },
+      "notifications_per_minute_by_priority":{  
+         "EMERGENCY":60,
+         "NAVIGATION":15,
+         "VOICECOM":20,
+         "COMMUNICATION":6,
+         "NORMAL":4,
+         "NONE":0
+      }
+   }
+}
+```
+
+19. 
+
+In case 
+
+PTU does not contain OEM Network Mapping table
+
+SDL must
+
+- treat the PTU as invalid
+- notify HMI with OnStatusUpdate(UPDATE_NEEDED)
+
+20. 
+
+In case
+
+VehicleDataItems are changed/updated during PTU
+
+PTU must contain `schema_items` and `schema_version`
+
+21. 
+
+`schema_version` must be included in `vehicle_data` only if `schema_items` schema is included
+
+22. 
+
+In case 
+
+`schema_version` is not included in PTU
+
+SDL must 
+
+skip the `schema_items` update
+
+
+#### vehicle data schema update
+23. 
+
+In case in a PTU
+
+`schema_items` key does not exist
+
+SDL must
+
+not update `schema_items` local schema/items
+
+24. 
+
+In case in a PTU
+
+`schema_items` is present
+
+SDL must
+
+replace all local schema VehicleDataItems with new ones except the ones defined in RPC spec
+
+25. 
+
+In case in a PTU
+
+`schema_items` is present but empty
+
+SDL must
+
+remove all local schema VehicleDataItems except the ones defined in RPC spec
+
+26. 
+
+In case in a PTU
+
+`schema_items` has item with same name as one of the VehicleDataItems defined in RPC spec
+
+SDL must
+
+ignore those data items
+
+
 #### PTU merge
 
-16. 
+27. 
 
 In case of successful PTU validation   
 
@@ -246,7 +449,7 @@ replace the following sections of the Local Policy Table with the corresponding 
 * `functional_groupings`,
 * `app_policies`
 
-17. 
+28. 
 
 In case 
 
