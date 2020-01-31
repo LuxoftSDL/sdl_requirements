@@ -33,7 +33,7 @@ SDL must
 include `schema_version` while requesting the policy update 
 
 _Information:_  
-a. Policy server would then compare the schema version received from cloud with what is available on server. Based on this comparison, vehicle data schema update would be sent in policy update response.
+a. Policy server would compare the schema version received from cloud with what is available on server. Based on this comparison, vehicle data schema update would be sent in policy update response.
 
 2.2
 

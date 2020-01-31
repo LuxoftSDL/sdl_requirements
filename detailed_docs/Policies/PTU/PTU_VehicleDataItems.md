@@ -13,8 +13,9 @@ and app sends SubscribeVehicleData request
 SDL must
 - transfer SubscribeVehicleData request (with `VD_name` for RPC spec data and with `VD_key` for custom data) from mobile app to HMI
 - convert HMI response (`VD_keys` to -> `VD_names`)
-- send the response with SubscribeVehicleData(VD_name) to mobile app
-- transfer OnVehicleData notification with subscribed data from HMI to mobile app
+- send the response with SubscribeVehicleData(`VD_name`) to mobile app
+- convert OnVehicleData notification received from HMI (`VD_keys` to -> `VD_names`)
+- send OnVehicleData(`VD_name`) notification to mobile app
 
 
 ### Unsubscription from RPC spec and custom data after PTU with VehicleDataItems
@@ -31,7 +32,7 @@ SDL must
 
 - transfer UnsubscribeVehicleData request (with `VD_name` for RPC spec data and with `VD_key` for custom data) from mobile app to HMI
 - convert HMI response (`VD_keys` to -> `VD_names`)
-- send the response with SubscribeVehicleData(VD_name) to mobile app
+- send the response with UnsubscribeVehicleData(VD_name) to mobile app
 - NOT transfer OnVehicleData notification with subscribed data from HMI to the mobile app
 
 
