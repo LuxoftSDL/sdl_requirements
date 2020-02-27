@@ -205,16 +205,16 @@ SDL must
 - discard the Policy Table Update with No notification of Cloud about invalid data
 - notify HMI with OnStatusUpdate(UPDATE_NEEDED)
 
-### Applying of the VehicleDataItems from PTU
+### Applying of `vehicle_data` from PTU
 16. 
 
 In case
-preloaded file contains VehicleDataItems for all RPC spec VehicleData
-and PTU is performed with VehicleDataItems in update file
+preloaded file contains `vehicle_data` for all RPC spec VehicleData
+and PTU is performed with `vehicle_data` in update file
 
 SDL must
 - apply the update, saves it to DB
-- send OnPermissionChange with updated `VehicleData` to mobile app
+- send OnPermissionChange with updated allowed parameters for the vehicle data defined in the `vehicle_data` to the app that is allowed to access those vehicle data parameters
 
 _Info_  
 a. VehicleDataItem - is the vehicle data item in question. e.g. gps, speed etc. SDL core would use this as the vehicle data param for requests from the app and to validate policies permissions.
@@ -240,7 +240,7 @@ SDL must
 
 In case 
 
-PTU contains OEM Network Mapping table
+PTU contains OEM Network Mapping table version
 
 SDL must 
 
@@ -248,11 +248,12 @@ persist OEM Network Mapping version in local policy DB
 
 _Info_
 
-a. **OEM Network Mapping version** - is version variable for OEM Network Mapping table located in `module_config` -> `endpoint_properties`
+a. **OEM Network Mapping version** - is version variable for OEM Network Mapping table located in `module_config` -> `endpoint_properties` -> `custom_vehicle_data_mapping_url`
 
-b. HMI needs to be able to read **OEM Network Mapping table version** value on demand so that it can control if and when to download the **OEM Network Mapping table**. HMI will utilize the _endpoint_ for OEM Network Mapping table file to download this file using _SystemRequest_ `requestType` _OEM_SPECIFIC_ and `requestSubType` _VEHICLE_DATA_MAPPING_. OEM Network Mapping table file would have _endpoint_ key (service) as _custom_vehicle_data_mapping_url_.
+b. HMI needs to be able to read **OEM Network Mapping table version** value on demand so that it can control if and when to download the **OEM Network Mapping table**.  
+HMI will utilize the endpoint for OEM Network Mapping table file to download this file using _SystemRequest_ `requestType` _OEM_SPECIFIC_ and `requestSubType` _VEHICLE_DATA_MAPPING_. OEM Network Mapping table file would have _endpoint_ key (service) as _custom_vehicle_data_mapping_url_.
 
-Example for OEM Network Mapping table file `endpoint` and `version` in PTU
+Example for OEM Network Mapping table file `endpoints` and `version` in PTU
 
 ```
 {  
@@ -317,7 +318,7 @@ Example for OEM Network Mapping table file `endpoint` and `version` in PTU
 
 In case 
 
-PTU does not contain OEM Network Mapping table
+PTU does not contain OEM Network Mapping table version
 
 SDL must
 
