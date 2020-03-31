@@ -1,11 +1,31 @@
 ## Functional Requirements
-### HMI chooses to process PTU via in-vehicle modem - Happy path
+
+### PTU via in-vehicle modem - No registered apps
 
 1. 
+In case
+
+SDL is build with PROPRIETARY or EXTERNAL_PROPRIETARY flag
+
+there are no registered apps
+
+and PTU is triggered (_see also triggers_)
+
+SDL must
+
+- send BC.PolicyUpdate (path to PTS) request to the HMI enable it to use the HMI vehicle modem to handle the PTU
+- send SDL.OnStatusUpdate(UPDATE_NEEDED) notification to HMI
+
+### HMI chooses to process PTU via in-vehicle modem - Happy path
+
+2. 
 In case 
 
 SDL is build with PROPRIETARY or EXTERNAL_PROPRIETARY flag
-and and PTU was triggered (_see also triggers_)
+
+an app is registred with SDL
+
+and PTU was triggered
 
 and SDL sent PTSnapshot to HMI
 
@@ -15,13 +35,15 @@ HMI is expected to
 
 _HMI Note: In case HMI choses to use the modem, it should not use the OnSystemRequest itself and route the request through other channels to modem._
 
-2. 
+3. 
 In case
 
-SDL is build with PROPRIETARY or EXTERNAL_PROPRIETARY flag
+an app is registred with SDL and PTU was triggered
+
 and SDL sent PTS to HMI and started the timeout waiting for the PTU
 
-and HMI processes PTU using in-vehicle modem to reach Policy Server  
+and HMI chooses to process PTU using in-vehicle modem to reach Policy Server 
+ 
 and sends SDL.OnReceivedPolicyUpdate (decrypted `policyFile`) to SDL within the timeout
 
 SDL must
@@ -32,7 +54,7 @@ SDL must
 
 ### PTU via in-vehicle modem - Backend isn't reached by the modem
 
-3. 
+4. 
 In case
 
 SDL sent PTS to HMI and started the timeout waiting for the PTU
